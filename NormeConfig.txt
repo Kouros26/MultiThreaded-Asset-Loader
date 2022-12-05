@@ -1,0 +1,111 @@
+variable
+	globale g_varName
+	membre	varName
+	membre statique varName
+	locale varName
+	constante (ex: pi(3.1416...), magic number) VARNAME
+	statique	varName
+	pointeur	varName
+	reference	varName
+	single letter (ex: int i;) i,j,k
+
+fonction
+	globale		PascalCase
+	membre		PascalCase
+	membre statique	PascalCase
+	statique	PascalCase
+	surcharge d'operateur membre	PascalCase
+	surcharge d'operateur non-membre	PascalCase
+	variadique	PascalCase
+	one-liner (.h, .cpp?)	PascalCase
+	lambda		PascalCase
+	constexpr	PascalCase
+	inline		PascalCase
+
+Classe
+	normal		PascalCase
+	imbriquee	PascalCase
+	heritage	PascalCase
+	interface	IPascalCase
+	template	TPascalCase
+	rule of 3?	no
+	rule of 5?	no
+	getter/setter	PascalCase
+
+Commentaire
+	// vs /**/
+	entete de fichier
+	documentation
+	utilisation de banderole
+
+Struct
+
+Enum
+
+Namespace
+
+preprocesseur
+	alias
+	macro
+	variadique
+	pragma
+		once
+		comment
+		warning
+
+C++
+	compatibilite 98 / 03 / 11 / 14 / 17 / 20 ?
+	compatibilite cross-platforme
+	librarie dynamique (dll) vs librarie statique
+	std
+	RAII
+	CRTP
+	SFINAE
+	utilisation d'attibute
+		[[nodiscard]]
+		[[fallthrough]]
+		[[deprecated]]
+		[[noreturn]]
+		[[maybe_unused]]
+
+CMAKE ???
+	niveau de warning
+	inclusion de librarie
+
+code
+	indentation (tab, 4 space, ...)
+	alignement des declaration
+	longueur des ligne
+	longueur des fonction
+	nombre de parametre par fonction
+	accolade (moustache -> {} )
+	if one-liner?
+	for one-liner?
+	while one-liner?
+	switch
+		default:
+		fallthrough
+		if / else if
+	declaration multiple par ligne (ex: int a = 0, b = 1;)
+	instruction multiple par ligne (ex: a++; b++;)
+	instruction sur plusieurs lignes
+	utilisation de bitfield et de bitwise operation (au lieu de boolean)
+	memory leak
+	exception vs error code
+	typedef des type de base
+	ANSI vs UNICODE (char vs wchar_t)
+	funky stuff (ex: if (!(component = getComponent(++i))->isActive()) continue;)
+
+Pattern
+	fluent API
+	singleton
+	observer
+	factory
+	builder
+	object pool
+	prototype
+	composite
+	flyweight
+	command
+	iterator
+	???
