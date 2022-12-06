@@ -5,11 +5,12 @@
 #include <sstream>
 #include <iostream>
 
-#include "Mat4/Mat4.h"
-#include "Vec3/Vec3.h"
-#include "Vec2/Vec2.h"
+#include "../LibMaths/Mat4/Mat4.h"
+#include "../LibMaths/Vec3/Vec3.h"
+#include "../LibMaths/Vec2/Vec2.h"
 
-#include "../Ressource/ResourcesManager.h"
+
+#include "Ressource/ResourcesManager.h"
 
 class Shader : public IResource
 {
@@ -90,7 +91,7 @@ public:
         {
             const char* gShaderCode = geometryCode.c_str();
             geometry = glCreateShader(GL_GEOMETRY_SHADER);
-            glShaderSource(geometry, 1, &gShaderCode, NULL);
+            glShaderSource(geometry, 1, &gShaderCode, nullptr);
             glCompileShader(geometry);
             checkCompileErrors(geometry, "GEOMETRY");
         }

@@ -9,8 +9,8 @@
 #include <iostream>
 #include <map>
 #include <vector>
-#include "../LowRenderer/AssimpMesh.h"
-#include "../Ressource/ResourcesManager.h"
+#include "Ressource/AssimpMesh.h"
+#include "Ressource/ResourcesManager.h"
 
 class Model : public IResource
 {

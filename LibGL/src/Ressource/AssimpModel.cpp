@@ -1,4 +1,4 @@
-#include "../../libGL/include/Ressource/AssimpModel.h"
+#include "Ressource/AssimpModel.h"
 
 #include <stb_image.h>
 

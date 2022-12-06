@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 include("FetchContent")
 
-get_filename_component(CURRENT_FOLDER_NAME ${CMAKE_CURRENT_LIST_DIR} NAME)
-set(PROJECT_NAME ${CURRENT_FOLDER_NAME})
+set(PROJECT_NAME AssetLoader)
+set(OPENGL_PROJECT OpenGL)
 
 project(${PROJECT_NAME} LANGUAGES CXX)
 
@@ -14,27 +14,17 @@ set(CMAKE_CXX_STANDARD 20)
 
 file(GLOB_RECURSE SOURCE_CORE "${PROJECT_SOURCE_DIR}/Core/src/*.cpp")
 file(GLOB_RECURSE INCLUDE_CORE "${PROJECT_SOURCE_DIR}/Core/include/*.h")
-file(GLOB_RECURSE SOURCE_FILEGL "${PROJECT_SOURCE_DIR}/LibGL/src/*.cpp")
-file(GLOB_RECURSE INCLUDE_FILEGL "${PROJECT_SOURCE_DIR}/LibGL/include/*.h")
+
+set(OPENGL_DIR "${PROJECT_SOURCE_DIR}/LibGL")
+file(GLOB_RECURSE FILEGL "${OPENGL_DIR}/src/*.cpp" "${OPENGL_DIR}/include/*.h")
 
 add_executable(${PROJECT_NAME}
 			${SOURCE_CORE}
-			${INCLUDE_CORE}
-			${SOURCE_FILEGL}
-			${INCLUDE_FILEGL})
+			${INCLUDE_CORE})
 
-source_group("Source Files\\OpenGL" FILES ${SOURCE_FILEGL})
-source_group("Header Files\\OpenGL" FILES ${INCLUDE_FILEGL})
-source_group("Source Files\\MultiThreading" FILES ${SOURCE_CORE})
-source_group("Header Files\\MultiThreading" FILES ${INCLUDE_CORE})
 set_property(TARGET ${PROJECT_NAME} PROPERTY
 
 VS_DEBUGGER_WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}")
-
-#add GLAD
-target_include_directories(${PROJECT_NAME} PUBLIC
-	"external/GLAD/include")
-target_sources(${PROJECT_NAME} PUBLIC "external/GLAD/src/glad.cpp")
 
 #add GLFW
 FetchContent_Declare(
@@ -77,15 +67,23 @@ FetchContent_Declare(
 # target_link_libraries(${PROJECT_NAME} PUBLIC ImGui)
 
 FetchContent_MakeAvailable(glfw assimp MathLib)
-
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE_DIR})
+set(CORE_INCLUDE "Core/include/")
+add_library(OpenglScene STATIC EXCLUDE_FROM_ALL "${FILEGL}")
+target_include_directories(OpenglScene PRIVATE "${OPENGL_DIR}/include")
+target_include_directories(${PROJECT_NAME} PRIVATE ${CORE_INCLUDE})
 target_include_directories(${PROJECT_NAME} PRIVATE ${assimp_SOURCE_DIR})
-target_include_directories(${PROJECT_NAME} PRIVATE ${glfw_SOURCE_DIR}/include)
+target_include_directories(${PROJECT_NAME} PRIVATE "${glfw_SOURCE_DIR}/include")
 target_include_directories(${PROJECT_NAME} PRIVATE ${MathLib})
+target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_DIR})
+
+target_include_directories(OpenglScene PUBLIC
+	"external/GLAD/include")
+target_sources(OpenglScene PUBLIC "external/GLAD/src/glad.cpp")
 
 target_link_libraries(${PROJECT_NAME} assimp)
 target_link_libraries(${PROJECT_NAME} glfw)
 target_link_libraries(${PROJECT_NAME} MathLib)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIB})
 
 if(MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)

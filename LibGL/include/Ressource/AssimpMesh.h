@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "../Ressource/AssimpShader.h"
+#include "Ressource/AssimpShader.h"
 using namespace std;
 
 #define MAX_BONE_INFLUENCE 4
