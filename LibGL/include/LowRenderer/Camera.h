@@ -1,7 +1,7 @@
 #pragma once
-#include "../../libmaths/LibMaths/Mat4/Mat4.h"
-#include "../../libmaths/LibMaths/Vec3/Vec3.h"
-#include "../../libmaths/LibMaths/Vec2/Vec2.h"
+#include "../../LibMaths/Mat4/Mat4.h"
+#include "../../LibMaths/Vec3/Vec3.h"
+#include "../../LibMaths/Vec2/Vec2.h"
 
 enum Camera_Movement {
 	FORWARD,

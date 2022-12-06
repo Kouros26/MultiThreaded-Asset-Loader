@@ -9,12 +9,6 @@
 #include <filesystem>
 #include "../LowRenderer/Camera.h"
 
-class IResource
-{
-public:
-	virtual ~IResource();
-};
-
 class ResourceManager
 {
 	std::unordered_map<std::string, IResource*> resources;

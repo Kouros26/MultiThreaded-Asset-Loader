@@ -66,7 +66,7 @@ FetchContent_Declare(
 # target_include_directories(ImGui PUBLIC ${BULLET_INCLUDE_DIR})
 # target_link_libraries(${PROJECT_NAME} PUBLIC ImGui)
 
-FetchContent_MakeAvailable(glfw assimp MathLib)
+FetchContent_MakeAvailable(glfw assimp )
 set(CORE_INCLUDE "Core/include/")
 add_library(OpenglScene STATIC EXCLUDE_FROM_ALL "${FILEGL}")
 target_include_directories(OpenglScene PRIVATE "${OPENGL_DIR}/include")
@@ -82,7 +82,7 @@ target_sources(OpenglScene PUBLIC "external/GLAD/src/glad.cpp")
 
 target_link_libraries(${PROJECT_NAME} assimp)
 target_link_libraries(${PROJECT_NAME} glfw)
-target_link_libraries(${PROJECT_NAME} MathLib)
+# target_link_libraries(${PROJECT_NAME} MathLib)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIB})
 
 if(MSVC)

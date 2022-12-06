@@ -2,6 +2,7 @@
 #include "../Ressource/ResourcesManager.h"
 #include "../Ressource/AssimpShader.h"
 #include "../../../game/include/GameObject.h"
+#include "Ressource/Shader.h"
 
 class Light : public Component
 {
