@@ -1,19 +1,5 @@
 #pragma once
-#include "../include/Application.h"
-#include "../../game/include/Bullet/WorldPhysicsComponents.h"
-#include "../../game/include/Bullet/BoxRigidBody.h"
-#include "../../game/include/Player.h"
-#include "../../game/include/imgui_app.h"
-#include "../../game/include/Portals.h"
-#include "../../game/include/Platform.h"
-#include "../../game/include/Bullet/DebugDrawer.h"
-#include "../../game/include/Bullet/RigidBody.h"
-#include "../../game/include/Player.h"
-#include "../../game/include/Companion.h"
-#include <stb_image.h>
-#include "../../game/include/Gun.h"
-
-using namespace Bullet;
+#include "Application.h"
 
 Application::Application(Camera* cam)
 {
@@ -95,7 +81,6 @@ void Application::Gameloop()
 	Shader* lightShader = Singleton::resources->Create<Shader>("LitShader", "libGL/shaders/LightVertexShader.glsl", "libGL/shaders/LightFragShader.glsl");
 	Singleton::shaderList.push_back(lightShader);
 	Model* cubeModel = Singleton::resources->Get<Model>("Assets/Meshes\\cube.obj");
-
 
 	GameObject* light1 = new GameObject("LightCube1", cubeModel, lightShader, lm::vec3(-15.f, 15.f, -15.f), lm::vec3(0, 0, 0), lm::vec3(0.25f, 0.25f, 0.25f));
 	light1->CreatePointLight(lm::vec3(1.0f, 1.0f, 1.0f), lm::vec3(0.8f, 0.8f, 0.8f), lm::vec3(1.0f, 1.0f, 1.0f), 1.0f, 0.09f, 0.032f);
@@ -198,14 +183,13 @@ void Application::Gameloop()
 			ui->PostRender();
 		}
 
-			if (DebugDrawerActive)
-			{
-				btCamPos = btVector3(Singleton::cam->GetPosition().X(), Singleton::cam->GetPosition().Y(), Singleton::cam->GetPosition().Z());
-				btCamFront = btVector3(Singleton::cam->GetFoward().X(), Singleton::cam->GetFoward().Y(), Singleton::cam->GetFoward().Z());
-				world.GetDiscretWorld()->getDebugDrawer()->drawLine(btCamPos, btCamFront* player->GetRaycastRange(), btVector3(0, 0, 255));
-				WorldPhysics::GetInstance().GetDiscretWorld()->debugDrawWorld();
-			}
-
+		if (DebugDrawerActive)
+		{
+			btCamPos = btVector3(Singleton::cam->GetPosition().X(), Singleton::cam->GetPosition().Y(), Singleton::cam->GetPosition().Z());
+			btCamFront = btVector3(Singleton::cam->GetFoward().X(), Singleton::cam->GetFoward().Y(), Singleton::cam->GetFoward().Z());
+			world.GetDiscretWorld()->getDebugDrawer()->drawLine(btCamPos, btCamFront * player->GetRaycastRange(), btVector3(0, 0, 255));
+			WorldPhysics::GetInstance().GetDiscretWorld()->debugDrawWorld();
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -357,22 +341,22 @@ void Application::UpdateLights(Camera* cam, ResourceManager* manager)
 {
 	for (int i = 0; i < dirLights.size(); ++i)
 	{
-			dirLights[i]->UpdateLights(Singleton::resources->Get<Shader>("LitShader"), i);
-			glUniform1i(glGetUniformLocation(Singleton::resources->Get<Shader>("LitShader")->GetShaderProgram(), ("nbDirLight")), dirLights.size());
+		dirLights[i]->UpdateLights(Singleton::resources->Get<Shader>("LitShader"), i);
+		glUniform1i(glGetUniformLocation(Singleton::resources->Get<Shader>("LitShader")->GetShaderProgram(), ("nbDirLight")), dirLights.size());
 	}
 
 	for (int i = 0; i < pointLights.size(); ++i)
 	{
-			pointLights[i]->UpdateLights(Singleton::resources->Get<Shader>("LitShader"), i);
-			glUniform1i(glGetUniformLocation(Singleton::resources->Get<Shader>("LitShader")->GetShaderProgram(), ("nbPointLight")), pointLights.size());
+		pointLights[i]->UpdateLights(Singleton::resources->Get<Shader>("LitShader"), i);
+		glUniform1i(glGetUniformLocation(Singleton::resources->Get<Shader>("LitShader")->GetShaderProgram(), ("nbPointLight")), pointLights.size());
 	}
 
 	for (int i = 0; i < spotLights.size(); ++i)
 	{
 		spotLights[i]->SetPositionDirection(cam);
 
-			spotLights[i]->UpdateLights(Singleton::resources->Get<Shader>("LitShader"), i);
-			glUniform1i(glGetUniformLocation(Singleton::resources->Get<Shader>("LitShader")->GetShaderProgram(), ("nbSpotLight")), spotLights.size());
+		spotLights[i]->UpdateLights(Singleton::resources->Get<Shader>("LitShader"), i);
+		glUniform1i(glGetUniformLocation(Singleton::resources->Get<Shader>("LitShader")->GetShaderProgram(), ("nbSpotLight")), spotLights.size());
 	}
 }
 
@@ -385,10 +369,10 @@ void Application::UpdateScene(float deltaTime)
 		if (dynamic_cast<Turret*>(Singleton::sceneGraph[i]) != nullptr)
 			dynamic_cast<Turret*>(Singleton::sceneGraph[i])->Update();
 
-		if(dynamic_cast<Player*>(Singleton::sceneGraph[i]) != nullptr)
+		if (dynamic_cast<Player*>(Singleton::sceneGraph[i]) != nullptr)
 			dynamic_cast<Player*>(Singleton::sceneGraph[i])->Update(deltaTime);
 
-		if(dynamic_cast<Portals*>(Singleton::sceneGraph[i]) != nullptr)
+		if (dynamic_cast<Portals*>(Singleton::sceneGraph[i]) != nullptr)
 			dynamic_cast<Portals*>(Singleton::sceneGraph[i])->Update(*Singleton::_player);
 
 		if (dynamic_cast<Platform*>(Singleton::sceneGraph[i]) != nullptr)
@@ -494,7 +478,7 @@ void Application::mouse_callback(GLFWwindow* window, double xposIn, double yposI
 	app->lastX = xpos;
 	app->lastY = ypos;
 
-	if(app->EditorModeActive == false)
+	if (app->EditorModeActive == false)
 		Singleton::cam->ProcessMouseMovement(xoffset, yoffset);
 }
 
@@ -507,7 +491,7 @@ void Application::SaveScene()
 	pw.StartArray();
 	for (int i = 0; i < Singleton::sceneGraph.size(); i++)
 	{
-		if(dynamic_cast<GameObject*>(Singleton::sceneGraph[i]) != nullptr)
+		if (dynamic_cast<GameObject*>(Singleton::sceneGraph[i]) != nullptr)
 			dynamic_cast<GameObject*>(Singleton::sceneGraph[i])->SaveObject(pw);
 	}
 	pw.EndArray();

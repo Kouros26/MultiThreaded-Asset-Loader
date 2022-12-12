@@ -53,7 +53,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC "external/IrrKlang/include")
 #add Maths Library
 FetchContent_Declare(
 	MathLib
-	GIT_REPOSITORY https://github.com/Kouros26/MathLib.git)
+	GIT_REPOSITORY https://github.com/Kouros26/MathLib.git
+	GIT_TAG master)
+	
+
 
 #add ImGUI
 # file(GLOB_RECURSE IMGUI_SOURCES "external/ImGUI/*.cpp" "external/ImGUI/*.h")
@@ -67,22 +70,37 @@ FetchContent_Declare(
 # target_link_libraries(${PROJECT_NAME} PUBLIC ImGui)
 
 FetchContent_MakeAvailable(glfw assimp )
+
+#Header varLocations
 set(CORE_INCLUDE "Core/include/")
+set(OPENGL_INCLUDE "LibGL/include/")
+
+#OpenGL Include
 add_library(OpenglScene STATIC EXCLUDE_FROM_ALL "${FILEGL}")
 target_include_directories(OpenglScene PRIVATE "${OPENGL_DIR}/include")
-target_include_directories(${PROJECT_NAME} PRIVATE ${CORE_INCLUDE})
-target_include_directories(${PROJECT_NAME} PRIVATE ${assimp_SOURCE_DIR})
-target_include_directories(${PROJECT_NAME} PRIVATE "${glfw_SOURCE_DIR}/include")
-target_include_directories(${PROJECT_NAME} PRIVATE ${MathLib})
-target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_DIR})
+target_include_directories(OpenglScene PRIVATE ${CORE_INCLUDE})
+target_include_directories(OpenglScene PUBLIC ${MathLib})
 
 target_include_directories(OpenglScene PUBLIC
 	"external/GLAD/include")
 target_sources(OpenglScene PUBLIC "external/GLAD/src/glad.cpp")
 
+
+#MainProject Include
+target_include_directories(${PROJECT_NAME} PRIVATE ${CORE_INCLUDE})
+target_include_directories(${PROJECT_NAME} PRIVATE ${assimp_SOURCE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE "${glfw_SOURCE_DIR}/include")
+target_include_directories(${PROJECT_NAME} PRIVATE ${MathLib})
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${OPENGL_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE})
+
+
 target_link_libraries(${PROJECT_NAME} assimp)
 target_link_libraries(${PROJECT_NAME} glfw)
-# target_link_libraries(${PROJECT_NAME} MathLib)
+target_link_libraries(OpenglScene glfw)
+#target_link_libraries(${PROJECT_NAME} MathLib)
+#target_link_libraries(OpenglScene MathLib)
 target_link_libraries(${PROJECT_NAME} PUBLIC ${OPENGL_LIB})
 
 if(MSVC)
