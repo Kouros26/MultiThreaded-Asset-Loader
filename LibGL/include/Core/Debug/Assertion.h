@@ -1,9 +1,16 @@
+#pragma once
+#include <Windows.h>
+
 #ifdef _DEBUG
-#define ASSERT(cond)\
-if (!cond)\
-	__debugbreak();
+#define Assert(expr) \
+	if(!expr) \
+	{ \
+		__debugbreak(); \
+	}
 #else
-#define ASSERT(cond)\
-if (!cond)\
-	exit(EXIT_FAILURE);
+#define Assert(expr) \
+	if (!expr) \
+	{ \
+		std::abort(); \
+	}
 #endif

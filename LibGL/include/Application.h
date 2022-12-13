@@ -1,89 +1,113 @@
 #pragma once
+#include "Core/Debug/Assertion.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #include "Core/Debug/Log.h"
+
+#include "Mat4/Mat4.h"
+#include "Vec3/Vec3.h"
+
+#include "Model.h"
+#include "Shader.h"
+#include "Camera.h"
+#include "Resourcesmanager.h"
+#include "Mesh.h"
+#include "Light.h"
+#include "Texture.h"
+
+#include "GameObject.h"
+#include "Singleton.h"
+
+#include <cstdio>
+
+#include <cstdio>
+#include <ostream>
 #include <iostream>
-#include <filesystem>
-#include "LowRenderer/DirectionalLight.h"
-#include "LowRenderer/PointLight.h"
-#include "LowRenderer/SpotLight.h"
-//#include <Ressource/AssimpModel.h>
-//#include "Ressource/AssimpShader.h"
-//#include "LowRenderer/AssimpMesh.h"
 
-class Application
+namespace Resources
 {
-    GLFWwindow* window;
+	class Application
+	{
+	private:
+		//var
+		GLFWwindow* window;
+		lm::Mat4<float> projectionMat;
+		const int SCR_WIDTH;
+		const int SCR_HEIGHT;
 
-    std::vector<DirectionalLight*> dirLights;
-    std::vector<PointLight*> pointLights;
-    std::vector<SpotLight*> spotLights;
-    std::string currentUsedSafeFile;
-    std::string lastUsedSafeFile;
+		/*UIManager* UIManager;*/
 
-    float SCREENWIDTH;
-    float SCREENHEIGHT;
-    const float cameraSpeed = 2.5f;
-    float deltaTime = 0.0f;
-    float lastFrame = 0.0f;
-    float timeScale = 1.0f;
-    bool sceneGraphActive;
-    bool EditorModeActive = false;
-    bool EditorButtonPressed = false;
-    bool DebugDrawerButtonPressed = false;
-    bool DebugDrawerActive = false;
-    bool GrabbRaycastButtonPressed = false;
-    inline static bool JumpButtonPressed = false;
-    bool SoundButtonPressed = false;
-    bool SoundPaused = false;
-    float cooldownblue = 0.0f;
-    float cooldownorange = 0.0f;
+		//Delta Time
+		float currentTime;
+		float lastTime;
 
-public:
+		// Editor
+		int selectedItem;
+		int newGameObject;
+		bool addComponentButton;
+		bool renameGameObject;
 
-    float yaw = 0;
-    float pitch = 0;
-    float lastX;
-    float lastY;
-    bool firstMouse;
+		//Mouse Input
+		double lastMouseX;
+		double lastMouseY;
+		double mouseX;
+		double mouseY;
+		double mouseOffSetX;
+		double	mouseOffSetY;
+		bool firstMouse;
 
-    Application(Camera* cam);
-    void Gameloop();
-    void processInput(GLFWwindow* window);
-    ResourceManager* GetResourceManager();
-    GLFWwindow* GetWindow();
-    void SetCamera(Camera* cam);
-    void UpdateLights(Camera* cam, ResourceManager* manager);
-    void UpdateScene(float deltaTime);
-    void LoadModels();
-    void EditorMode();
-    void TerminateImGui();
+		//private function
+		void initWindow(const char* title);
+		void initGlad();
+		void initOpenGLOption();
+		void initCam();
+		void initLight();
+		void initGameObject();
 
-    float GetScrWdth() { return SCREENWIDTH; }
-    float GetScrHght() { return SCREENHEIGHT; }
-    float GetDeltaTime();
-    std::string& GetSaveFileName() { return currentUsedSafeFile; }
-    std::vector<DirectionalLight*>& getDirLights();
-    std::vector<PointLight*>& getPointLights();
-    std::vector<SpotLight*>& getSpotLights();
+		void initMusic();
 
-    static std::vector<Shader*>& getShaderList();
-    static Camera* getCamera();
-    static bool& getJumpButton();
+		void updateLights();
+		void updateGameObject();
 
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+		void GameLoop();
 
-    static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+	public:
+		//constructor / destructor
+		Application(
+			char const* title,
+			const int SCR_WIDTH,
+			const int SCR_HEIGHT);
 
-    void SaveScene();
-    void SaveScene(std::string filePath);
-    void NewScene(std::string filePath);
-    bool ReadScene(char const* filepath);
-    bool CreateSceneObject(std::fstream& file, std::vector<Graph*>& childs);
-    bool CreatePointLight(std::fstream& file, lm::vec3& ambiantColor, lm::vec3& diffuseColor, lm::vec3& specularColor, float& constant, float& linear, float& quadratic);
-    bool CreateSpotLight(std::fstream& file, lm::vec3& ambiantColor, lm::vec3& diffuseColor, lm::vec3& specularColor, float& constant, float& linear, float& quadratic, lm::vec3& direction, float cutOff, float outerCutOff);
-    bool CreateBoxRigidBody(std::fstream& file, float& mass, lm::vec3& halfExtend, lm::vec3& scale);
-    bool CreateCapsuleRigidBody(std::fstream& file, float& mass, float& radius, float& height);
-    bool CreateSphereRigidBody(std::fstream& file, float& mass, float& radius);
-};
+		//public function
+		void Run();
+		void updateDelta();
+		void updateMouseInput();
+
+		// Get
+		GLFWwindow* getWindow();
+
+		// Set
+		void setCursor(bool cursor);
+
+		void updateInput();
+		void processInput(GLFWwindow* window);
+
+		//gameObject
+		std::vector<GameObject*> gameObjects;
+		std::vector<GameObject*> gameObjectsCopy;
+
+		//clear color
+		lm::vec4 clear_color;
+
+		//editor
+
+		bool editor = true;
+		bool showDebugDrawer = true;
+		bool showImgui = true;
+
+		//static function
+		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+		static void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+	};
+}

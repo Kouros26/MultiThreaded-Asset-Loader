@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Vec3/Vec3.h"
 #include "ThreadPool.h"
 #include <unordered_map>
 #include <string>
@@ -14,7 +14,9 @@ class ResourceManager
 {
 public:
     std::unordered_map<std::string, IResource*> manager;
-    ThreadPool pool;
+    ThreadPool* pool;
+
+    ResourceManager();
 
     ~ResourceManager();
 
@@ -22,7 +24,9 @@ public:
     {
         std::unordered_map<std::string, IResource*>::iterator it = manager.find(pStr);
         if (it != manager.end())
+        {
             return (T**)&it->second;
+        }
 
         manager[pStr] = nullptr;
         pool.AddToQueue([this, pStr, &pArgs...]
@@ -37,7 +41,9 @@ public:
     {
         std::unordered_map<std::string, IResource*>::iterator it = manager.find(pStr);
         if (it == manager.end())
+        {
             return nullptr;
+        }
 
         return (T*)it->second;
     }

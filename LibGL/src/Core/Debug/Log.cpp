@@ -1,24 +1,37 @@
-#include "../../../include/Core/Debug/Log.h"
+// ReSharper disable CppDeprecatedEntity
 
-Log& Log::log = Log::Log();
+#include "Core/Debug/Log.h"
 
-Log& Log::GetInstance()
+using namespace Core::Debug;
+
+bool Log::Openfile(std::filesystem::path const& filename)
 {
-	return log;
-}
-
-Log::Log()
-{
-
+	if (fopen_s(&logFile, filename.string().c_str(), "w") != 0)
+	{
+		return false;
+	}
+	return logFile != nullptr;
 }
 
 Log::~Log()
 {
-	Log::log.file.close();
+	if (logFile)
+	{
+		fclose(logFile);
+	}
 }
 
-void Log::OpenFile(const std::filesystem::path& filename)
+void Log::Print(const char* format, ...)
 {
-	Log::log.file.close();
-	Log::log.file = std::fstream(filename, std::fstream::out);
+	va_list args;
+	va_start(args, format);
+	if (logFile != nullptr)
+	{
+		va_list copy;
+		va_copy(copy, args);
+		vfprintf(logFile, format, args);
+		va_end(copy);
+	}
+	vfprintf(stdout, format, args);
+	va_end(args);
 }

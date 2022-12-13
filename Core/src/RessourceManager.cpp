@@ -1,12 +1,17 @@
 #include "RessourceManager.h"
 
+ResourceManager::ResourceManager()
+{
+	pool = new ThreadPool;
+}
+
 ResourceManager::~ResourceManager()
 {
 	for (std::unordered_map<std::string, IResource*>::iterator it = manager.begin(); it != manager.end(); it++)
 		delete it->second;
 	manager.clear();
 
-	pool.~ThreadPool();
+	delete pool;
 }
 
 void ResourceManager::DeleteRessource(const std::string& pStr)
