@@ -15,6 +15,7 @@ public:
 private:
 
 	void ThreadLoop();
+
 	bool shouldStop = false;
 	std::mutex queueMutex;
 	std::condition_variable mutexCondition;
