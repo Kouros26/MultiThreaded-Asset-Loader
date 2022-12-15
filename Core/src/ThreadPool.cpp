@@ -1,4 +1,4 @@
-#include "../Core/include/ThreadPool.h"
+#include "ThreadPool.h"
 #include <iostream>
 
 ThreadPool::ThreadPool()

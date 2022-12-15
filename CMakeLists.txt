@@ -74,6 +74,7 @@ set(CORE_DIR "Core")
 add_library(Core STATIC EXCLUDE_FROM_ALL ${SOURCE_CORE} ${INCLUDE_CORE})
 target_include_directories(Core PRIVATE ${CORE_DIR})
 target_include_directories(${PROJECT_NAME} PUBLIC "${CORE_DIR}/include")
+target_include_directories(Core PUBLIC "${CORE_DIR}/include")
 target_link_libraries(${PROJECT_NAME} PUBLIC ${CORE_LIB})
 
 
