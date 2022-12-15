@@ -1,4 +1,4 @@
-#include "../include/Application.h"
+#include "Application.h"
 
 GameObject* Singleton::findObjectWithName(std::string str)
 {

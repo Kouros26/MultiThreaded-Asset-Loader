@@ -1,4 +1,4 @@
-#include "../Core/include/RessourceManager.h"
+#include "RessourceManager.h"
 
 ResourceManager::ResourceManager()
 {

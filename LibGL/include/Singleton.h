@@ -16,6 +16,9 @@ private:
 	Singleton() {
 		resources = new ResourceManager();
 	};
+	~Singleton() {
+		delete resources;
+	};
 	GameObject* currentCam = nullptr;
 	Resources::Shader* shader = nullptr;
 	ResourceManager* resources = nullptr;
@@ -75,7 +78,6 @@ public:
 	}
 
 	void playSound(int n, bool loop) {
-		{ /*IDK Man he doesn't want to compile*/std::cout << n << loop << " start\n"; }
 		//switch (n) {
 		//case 1: soundsVec.push_back(soundEngine->play2D("game/sounds/music.mp3", loop)); //music
 		//	break;
