@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-#include "Resourcesmanager.h"
+#include "RessourceManager.h"
 #include "Core/Debug/Log.h"
 #include "Vec3/Vec3.h"
 #include "Mat4/Mat4.h"

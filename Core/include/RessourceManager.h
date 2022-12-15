@@ -1,5 +1,5 @@
 #pragma once
-#include "Vec3/Vec3.h"
+
 #include "ThreadPool.h"
 #include <unordered_map>
 #include <string>
@@ -7,47 +7,55 @@
 class IResource
 {
 public:
-    virtual ~IResource() = default;
+	virtual ~IResource() = default;
 };
 
 class ResourceManager
 {
 public:
-    std::unordered_map<std::string, IResource*> manager;
-    ThreadPool* pool;
+	std::unordered_map <std::string, std::unique_ptr<IResource>> manager;
+	ThreadPool* pool;
 
-    ResourceManager();
+	ResourceManager();
 
-    ~ResourceManager();
+	~ResourceManager();
 
-    template <typename T, typename ...Args> T** CreateRessource(const std::string& pStr, Args&... pArgs)
-    {
-        std::unordered_map<std::string, IResource*>::iterator it = manager.find(pStr);
-        if (it != manager.end())
-        {
-            return (T**)&it->second;
-        }
+	template <typename T, typename ...Args>
+	T* CreateRessource(const char* const& filename, Args&... pArgs)
+	{
+		static_assert(std::is_base_of_v<IResource, T>, "T is not a child of IResources");
+		auto it = manager.find(filename);
+		if (it != manager.end())
+		{
+			return static_cast <T*>(it->second.get());
+		}
 
-        manager[pStr] = nullptr;
-        pool.AddToQueue([this, pStr, &pArgs...]
-            {
-                manager[pStr] = new T(pArgs...);
-            });
+		manager[filename] = nullptr;
+		if (pool)
+		{
+			pool->AddToQueue([this, filename, &pArgs...]
+				{
+					manager[filename] = std::make_unique<T>(filename, pArgs...);
+				});
+		}
+		std::unique_ptr<IResource>& value = manager[filename];
+		IResource* ptr = value.get();
+		T* rsc = static_cast<T*>(ptr);
+		return rsc;
+	}
 
-        return (T**)&manager[pStr];
-    }
+	template <typename T>
+	T* Get(std::string const& filename)
+	{
+		auto it = manager.find(filename);
+		if (it == manager.end())
+		{
+			return nullptr;
+		}
 
-    template <typename T> T* Get(const std::string& pStr)
-    {
-        std::unordered_map<std::string, IResource*>::iterator it = manager.find(pStr);
-        if (it == manager.end())
-        {
-            return nullptr;
-        }
+		return static_cast <T*>(it->second.get());
+	};
 
-        return (T*)it->second;
-    }
-
-    void DeleteRessource(const std::string& str);
-    void Clear();
+	void DeleteRessource(const std::string& str);
+	void Clear();
 };

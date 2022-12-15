@@ -91,15 +91,10 @@ bool Model::load_obj(const char* filename)
 			if (temp_uv.empty() && temp_normal.empty())
 			{
 				only_vertices = true;
-				if (fscanf_s(file, "%lld %lld %lld\n",
+				fscanf_s(file, "%lld %lld %lld\n",
 					&temp_position_buffer[0],
 					&temp_position_buffer[3],
-					&temp_position_buffer[6]) != 3)
-				{
-					log.Print("Model.cpp | LoadOBJ : Error while reading face\n");
-					return false;
-				}
-
+					&temp_position_buffer[6]);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[0] - 1], 0.f, 0.f);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[3] - 1], 0.f, 0.f);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[6] - 1], 0.f, 0.f);
@@ -108,15 +103,10 @@ bool Model::load_obj(const char* filename)
 			if (temp_uv.empty() && only_vertices == false)
 			{
 				long long temp_normal_buffer[9]{ 0 };
-				if (fscanf_s(file, "%lld//%lld/ %lld//%lld/ %lld//%lld/\n",
+				fscanf_s(file, "%lld//%lld %lld//%lld %lld//%lld\n",
 					&temp_position_buffer[0], &temp_normal_buffer[2],
 					&temp_position_buffer[3], &temp_normal_buffer[5],
-					&temp_position_buffer[6], &temp_normal_buffer[8]) != 6)
-				{
-					log.Print("Model.cpp | LoadOBJ : Error while reading face\n");
-					return false;
-				}
-
+					&temp_position_buffer[6], &temp_normal_buffer[8]);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[0] - 1], 0.f, temp_normal[temp_normal_buffer[2] - 1]);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[3] - 1], 0.f, temp_normal[temp_normal_buffer[5] - 1]);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[6] - 1], 0.f, temp_normal[temp_normal_buffer[8] - 1]);
@@ -124,14 +114,10 @@ bool Model::load_obj(const char* filename)
 			if (temp_normal.empty() && only_vertices == false)
 			{
 				long long temp_uv_buffer[9]{ 0 };
-				if (fscanf_s(file, "%lld/%lld/ %lld/%lld/ %lld/%lld/\n",
+				fscanf_s(file, "%lld/%lld/ %lld/%lld/ %lld/%lld/\n",
 					&temp_position_buffer[0], &temp_uv_buffer[1],
 					&temp_position_buffer[3], &temp_uv_buffer[4],
-					&temp_position_buffer[6], &temp_uv_buffer[7]) != 6)
-				{
-					log.Print("Model.cpp | LoadOBJ : Error while reading face\n");
-					return false;
-				}
+					&temp_position_buffer[6], &temp_uv_buffer[7]);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[0] - 1], temp_uv[temp_uv_buffer[1] - 1], 0);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[3] - 1], temp_uv[temp_uv_buffer[4] - 1], 0);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[6] - 1], temp_uv[temp_uv_buffer[7] - 1], 0);
@@ -140,14 +126,10 @@ bool Model::load_obj(const char* filename)
 			{
 				long long temp_uv_buffer[9]{ 0 };
 				long long temp_normal_buffer[9]{ 0 };
-				if (fscanf_s(file, "%lld/%lld/%lld/ %lld/%lld/%lld/ %lld/%lld/%lld/\n",
+				fscanf_s(file, "%lld/%lld/%lld %lld/%lld/%lld %lld/%lld/%lld\n",
 					&temp_position_buffer[0], &temp_uv_buffer[1], &temp_normal_buffer[2],
 					&temp_position_buffer[3], &temp_uv_buffer[4], &temp_normal_buffer[5],
-					&temp_position_buffer[6], &temp_uv_buffer[7], &temp_normal_buffer[8]) != 9)
-				{
-					log.Print("Model.cpp | LoadOBJ : Error while reading face\n");
-					return false;
-				}
+					&temp_position_buffer[6], &temp_uv_buffer[7], &temp_normal_buffer[8]);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[0] - 1], temp_uv[temp_uv_buffer[1] - 1], temp_normal[temp_normal_buffer[2] - 1]);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[3] - 1], temp_uv[temp_uv_buffer[4] - 1], temp_normal[temp_normal_buffer[5] - 1]);
 				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[6] - 1], temp_uv[temp_uv_buffer[7] - 1], temp_normal[temp_normal_buffer[8] - 1]);

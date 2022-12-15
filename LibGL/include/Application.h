@@ -11,7 +11,7 @@
 #include "Model.h"
 #include "Shader.h"
 #include "Camera.h"
-#include "Resourcesmanager.h"
+#include "RessourceManager.h"
 #include "Mesh.h"
 #include "Light.h"
 #include "Texture.h"

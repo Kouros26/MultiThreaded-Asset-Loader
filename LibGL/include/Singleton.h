@@ -14,11 +14,11 @@ class Singleton
 {
 private:
 	Singleton() {
-		resources = new Resources::ResourcesManager();
+		resources = new ResourceManager();
 	};
 	GameObject* currentCam = nullptr;
 	Resources::Shader* shader = nullptr;
-	Resources::ResourcesManager* resources = nullptr;
+	ResourceManager* resources = nullptr;
 	lm::mat4 projection;
 public:
 	int gmCount = 0;
@@ -102,7 +102,7 @@ public:
 		soundsVec.clear();*/
 	}
 
-	Resources::ResourcesManager* getResources() {
+	ResourceManager* getResources() {
 		return resources;
 	};
 

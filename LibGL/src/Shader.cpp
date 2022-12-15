@@ -1,4 +1,4 @@
-#include "../include/Shader.h"
+#include "Shader.h"
 
 Resources::Shader::Shader(const char* vertexFile, const char* fragmentFile)
 {

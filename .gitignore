@@ -81,3 +81,4 @@ install_manifest.txt
 *.exe
 *.out
 *.app
+LogFile.txt

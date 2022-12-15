@@ -2,7 +2,7 @@
 
 #include <utility>
 #include <vector>
-#include "Resourcesmanager.h"
+#include "RessourceManager.h"
 #include "Texture.h"
 #include "Vec2/Vec2.h"
 #include "Vec3/Vec3.h"

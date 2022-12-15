@@ -2,7 +2,7 @@
 #include "glad/glad.h"
 
 #include <stb_image.h>
-#include "Resourcesmanager.h"
+#include "RessourceManager.h"
 
 namespace Resources
 {

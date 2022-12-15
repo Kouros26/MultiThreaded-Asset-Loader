@@ -1,4 +1,4 @@
-#include "../include/Application.h"
+#include "Application.h"
 
 void Application::initWindow(const char* title)
 {
@@ -85,7 +85,7 @@ void Application::initGameObject()
 	//same order pls
 	gameObjects.emplace_back(box1);
 
-	box1->addComponent(new LowRenderer::Mesh("libGL/OPENGL PROJECT/assets/meshes/chest.obj", "libGL/OPENGL PROJECT/assets/textures/container.jpg"));
+	box1->addComponent(new LowRenderer::Mesh("libGL/assets/meshes/chest.obj", "libGL/assets/textures/container.jpg"));
 	box1->localTransform.translate(lm::vec3(20, 25, 0));
 	box1->localTransform.setRotation(lm::vec3(0, 90, 0));
 }
@@ -222,7 +222,7 @@ void Application::Run()
 	initCam();
 
 	//shader
-	SINGLETON.setShader(SINGLETON.getResources()->Create<Shader>("libGL/OPENGL PROJECT/source/shaders/core_vertex.glsl", "libGL/OPENGL PROJECT/source/shaders/core_fragment.glsl"));
+	SINGLETON.setShader(SINGLETON.getResources()->CreateRessource<Shader>("LibGL/shaders/core_vertex.glsl", "libGL/shaders/core_fragment.glsl"));
 
 	//lights
 	initLight();

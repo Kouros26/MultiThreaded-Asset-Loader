@@ -1,8 +1,8 @@
-#include "../include/Mesh.h"
+#include "Mesh.h"
 
 #include <glad/glad.h>
 
-#include "../include/Singleton.h"
+#include "Singleton.h"
 
 lm::mat4 LowRenderer::Mesh::calculateMVP(lm::Mat4<float> view)
 {
@@ -38,7 +38,7 @@ LowRenderer::Mesh::Mesh(std::string modelPath, std::string texturePath)
 	}
 	else
 	{
-		this->model = SINGLETON.getResources()->Create<Model>(modelPath.c_str());
+		this->model = SINGLETON.getResources()->CreateRessource<Model>(modelPath.c_str());
 	}
 
 	if (texturePath != "") {
@@ -47,7 +47,7 @@ LowRenderer::Mesh::Mesh(std::string modelPath, std::string texturePath)
 		}
 		else
 		{
-			this->texture = SINGLETON.getResources()->Create<Texture>(texturePath.c_str());
+			this->texture = SINGLETON.getResources()->CreateRessource<Texture>(texturePath.c_str());
 		}
 	}
 }
