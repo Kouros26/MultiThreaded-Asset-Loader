@@ -22,7 +22,7 @@ void LowRenderer::Mesh::Update(GameObject* gameObject, float delta)
 			texture->Bind();
 
 		UpdateUniform(SINGLETON.GetShader(), SINGLETON.GetCam()->GetComponent<Camera>("Camera"));
-		model->draw();
+		model->Draw();
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }
@@ -38,11 +38,20 @@ LowRenderer::Mesh::Mesh(const std::string modelPath, const std::string texturePa
 	mPath = modelPath;
 	tPath = texturePath;
 
-	model = SINGLETON.GetResources()->Create<Model>(modelPath.c_str());
+	SINGLETON.GetResources()->Create<Model>(modelPath.c_str());
+	model = SINGLETON.GetResources()->Get<Model>(modelPath.c_str());
 
 	if (!texturePath.empty()) {
-		texture = SINGLETON.GetResources()->Create<Texture>(texturePath.c_str());
+		SINGLETON.GetResources()->Create<Texture>(texturePath.c_str());
+		texture = SINGLETON.GetResources()->Get<Texture>(texturePath.c_str());
 	}
+}
+
+LowRenderer::Mesh::Mesh(Model* model, Texture* texture)
+{
+	name = "Mesh";
+	this->model = model;
+	this->texture = texture;
 }
 
 void LowRenderer::Mesh::UpdateUniform(Resources::Shader* shader, Camera* cam)
