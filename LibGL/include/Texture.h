@@ -11,13 +11,16 @@ namespace Resources
 	public:
 		GLuint index;
 
-		Texture() {
-			index = GL_FALSE;
-		};
 		Texture(char const* const& filename);
 
-		void loadTexture(char const* const& filename);
+		virtual void init() override;
 
 		void Bind();
+
+	private:
+		unsigned char* data;
+		int x = 512;
+		int y = 512;
+		int n = 3;
 	};
 }

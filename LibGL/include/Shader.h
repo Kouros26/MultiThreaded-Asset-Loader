@@ -21,9 +21,12 @@ namespace Resources
 		//private var
 		int id = 0;
 
+		std::string vertexShader;
+		std::string fragmentShader;
+
 		//private func
 		std::string loadSourceShader(const char* filename);
-		int load_shader(GLenum type, const char* filename);
+		int load_shader(GLenum type, const char* file);
 		void Link(int vertexShader, int fragmentShader);
 	public:
 		//Constructor / destructor
@@ -31,7 +34,7 @@ namespace Resources
 		Shader(const char* vertexShader, const  char* fragmentShader);
 		~Shader();
 		//public func
-		void init(const char* vertexShader, const  char* fragmentShader);
+		virtual void init() override;
 
 		void setMat4f(const lm::Mat4<float> value, const char* name);
 		void setBool(const std::string& name, bool value);

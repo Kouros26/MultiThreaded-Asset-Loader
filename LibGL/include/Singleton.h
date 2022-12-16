@@ -4,7 +4,7 @@
 #include "Light.h"
 
 #include <vector>
-//#include <irrKlang.h>
+#include <irrKlang.h>
 
 namespace Resources {
 	class Application;
@@ -34,8 +34,8 @@ public:
 	GameObject* editorCam = nullptr;
 	GameObject* gameCam = nullptr;
 	Resources::Application* app = nullptr;
-	//irrklang::ISoundEngine* soundEngine = nullptr;
-	//std::vector<irrklang::ISound*> soundsVec;
+	irrklang::ISoundEngine* soundEngine = nullptr;
+	std::vector<irrklang::ISound*> soundsVec;
 
 	static Singleton& getInstance()
 	{
@@ -78,30 +78,15 @@ public:
 	}
 
 	void playSound(int n, bool loop) {
-		//switch (n) {
-		//case 1: soundsVec.push_back(soundEngine->play2D("game/sounds/music.mp3", loop)); //music
-		//	break;
-		//case 2: soundsVec.push_back(soundEngine->play2D("game/sounds/portal_shoot_player.mp3", loop)); //player shoot portal
-		//	break;
-		//case 3: soundsVec.push_back(soundEngine->play2D("game/sounds/player_teleport.mp3", loop)); //player teleport
-		//	break;
-		//case 4: soundsVec.push_back(soundEngine->play2D("game/sounds/player_hit.mp3", loop)); //player hit
-		//	break;
-		//case 5: soundsVec.push_back(soundEngine->play2D("game/sounds/button.mp3", loop)); //button activate
-		//	break;
-		//case 6: soundsVec.push_back(soundEngine->play2D("game/sounds/grab_object.mp3", loop)); //player grab object
-		//	break;
-		//case 7: soundsVec.push_back(soundEngine->play2D("game/sounds/turret_down.mp3", loop)); //turret destroyed
-		//	break;
-		//}
+		soundsVec.push_back(soundEngine->play2D("LibGL/assets/Sounds/music.mp3", loop)); //music
 	}
 
 	void stopAllSounds() {
-		/*for (int i = 0; i < soundsVec.size(); i++)
+		for (int i = 0; i < soundsVec.size(); i++)
 		{
 			std::cout << "ok" << std::endl;
 		}
-		soundsVec.clear();*/
+		soundsVec.clear();
 	}
 
 	ResourceManager* getResources() {

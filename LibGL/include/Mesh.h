@@ -17,7 +17,7 @@ namespace LowRenderer
 		std::string tPath;
 		void Start(GameObject* gameObject) override { /*IDK Man he doesn't want to compile*/std::cout << gameObject << " start\n"; }
 	public:
-		Mesh(std::string modelPath, std::string texturePath = "");
+		Mesh(const std::string modelPath, const std::string texturePath = "");
 		lm::Mat4<float> modelMat;
 		lm::Mat4<float> projectionMat;
 		lm::Mat4<float> viewMat;

@@ -2,17 +2,18 @@
 
 Resources::Shader::Shader(const char* vertexFile, const char* fragmentFile)
 {
-	init(vertexFile, fragmentFile);
+	vertexShader = loadSourceShader(vertexFile);
+	fragmentShader = loadSourceShader(fragmentFile);
 }
 
-void Resources::Shader::init(const char* vertexFile, const char* fragmentFile)
+void Resources::Shader::init()
 {
-	int vertexShader = 0;
-	int FragmentShader = 0;
-	vertexShader = load_shader(GL_VERTEX_SHADER, vertexFile);
-	FragmentShader = load_shader(GL_FRAGMENT_SHADER, fragmentFile);
+	int vertexShaderId = 0;
+	int FragmentShaderId = 0;
+	vertexShaderId = load_shader(GL_VERTEX_SHADER, vertexShader.c_str());
+	FragmentShaderId = load_shader(GL_FRAGMENT_SHADER, fragmentShader.c_str());
 
-	this->Link(vertexShader, FragmentShader);
+	this->Link(vertexShaderId, FragmentShaderId);
 }
 
 Resources::Shader::~Shader()
@@ -44,16 +45,14 @@ std::string Resources::Shader::loadSourceShader(const char* filename)
 	return src;
 }
 
-int Resources::Shader::load_shader(GLenum type, const char* filename)
+int Resources::Shader::load_shader(GLenum type, const char* file)
 {
 	char log[512];
 	int succes;
 
 	int shader = glCreateShader(type);
-	std::string tem_src = this->loadSourceShader(filename);
-	const char* src = tem_src.c_str();
 
-	glShaderSource(shader, 1, &src, NULL);
+	glShaderSource(shader, 1, &file, NULL);
 	glCompileShader(shader);
 
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &succes);

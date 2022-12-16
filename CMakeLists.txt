@@ -48,8 +48,8 @@ FetchContent_Declare(
 target_include_directories(${PROJECT_NAME} PUBLIC "external/STB")
 
 #add IrrKlang
-target_include_directories(${PROJECT_NAME} PUBLIC "external/IrrKlang/include")
-target_link_libraries(${PROJECT_NAME} PUBLIC "../external/IrrKlang/lib/irrKlang")
+target_include_directories(${PROJECT_NAME} PUBLIC "external/irrKlang")
+target_link_libraries(${PROJECT_NAME} PUBLIC "${PROJECT_SOURCE_DIR}/external/irrKlang/lib/irrKlang.lib")
 
 #add Maths Library
 set(MATHS_DIR "LibMaths")

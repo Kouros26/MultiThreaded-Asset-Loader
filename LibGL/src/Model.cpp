@@ -14,7 +14,10 @@ Model::Model(const char* filename)
 {
 	only_vertices = false;
 	load_obj(filename);
+}
 
+void Model::init()
+{
 	vbo.init_vbo(this);
 	vao.init_vao();
 }

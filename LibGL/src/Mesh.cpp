@@ -27,28 +27,16 @@ void LowRenderer::Mesh::Update(GameObject* gameObject, float delta)
 	}
 }
 
-LowRenderer::Mesh::Mesh(std::string modelPath, std::string texturePath)
+LowRenderer::Mesh::Mesh(const std::string modelPath, const std::string texturePath)
 {
 	name = "Mesh";
 	mPath = modelPath;
 	tPath = texturePath;
 
-	if (SINGLETON.getResources()->Get<Model>(modelPath) != nullptr) {
-		this->model = SINGLETON.getResources()->Get<Model>(modelPath);
-	}
-	else
-	{
-		this->model = SINGLETON.getResources()->Create<Model>(modelPath.c_str());
-	}
+	model = SINGLETON.getResources()->Create<Model>(modelPath.c_str());
 
-	if (texturePath != "") {
-		if (SINGLETON.getResources()->Get<Texture>(texturePath) != nullptr) {
-			this->texture = SINGLETON.getResources()->Get<Texture>(texturePath);
-		}
-		else
-		{
-			this->texture = SINGLETON.getResources()->Create<Texture>(texturePath.c_str());
-		}
+	if (!texturePath.empty()) {
+		texture = SINGLETON.getResources()->Create<Texture>(texturePath.c_str());
 	}
 }
 

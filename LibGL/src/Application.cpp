@@ -74,25 +74,28 @@ void Application::initCam()
 
 void Application::initLight()
 {
-	GameObject* dirLight = new DirectionLight(lm::vec3(1, 1, 1), 0.1f, 0.1f, 0.3f);
+	GameObject* dirLight = new DirectionLight(lm::vec3(1, 1, 1), 0.5f, 0.5f, 0.8f);
 	gameObjects.emplace_back(dirLight);
 }
 
 void Application::initGameObject()
 {
-	GameObject* box1 = new GameObject("Box 1");
+	//create 5 box
+	for (int i = 0; i < 5; i++)
+	{
+		GameObject* box = new GameObject("Box" + std::to_string(i));
+		gameObjects.emplace_back(box);
+		box->addComponent(new LowRenderer::Mesh("libGL/assets/meshes/chest.obj", "libGL/assets/textures/container.jpg"));
+		box->localTransform.translate(lm::vec3(10, 0, i * 3));
+		box->localTransform.setRotation(lm::vec3(0, i * 15, 0));
+	}
 
-	//same order pls
-	gameObjects.emplace_back(box1);
-
-	box1->addComponent(new LowRenderer::Mesh("libGL/assets/meshes/chest.obj", "libGL/assets/textures/container.jpg"));
-	box1->localTransform.translate(lm::vec3(20, 25, 0));
-	box1->localTransform.setRotation(lm::vec3(0, 90, 0));
+	SINGLETON.playSound(0, true);
 }
 
 void Application::initMusic()
 {
-	//SINGLETON.soundEngine = createIrrKlangDevice();
+	SINGLETON.soundEngine = irrklang::createIrrKlangDevice();
 }
 
 void Application::updateLights()
@@ -103,24 +106,29 @@ void Application::updateLights()
 	int spotCounter = 0;
 
 	//can we simplify that ??
-	for (int i = 0; i < gameObjects.size(); i++)
-	{
-		if (static_cast<DirectionLight*>(gameObjects[i]) != nullptr)
-		{
-			static_cast<DirectionLight*>(gameObjects[i])->sendToShader(SINGLETON.getShader(), dirCounter);
-			dirCounter++;
-		}
-		if (static_cast<PointLight*>(gameObjects[i]) != nullptr)
-		{
-			static_cast<PointLight*>(gameObjects[i])->sendToShader(SINGLETON.getShader(), pointCounter);
-			pointCounter++;
-		}
-		if (static_cast<SpotLight*>(gameObjects[i]) != nullptr)
-		{
-			static_cast<SpotLight*>(gameObjects[i])->sendToShader(SINGLETON.getShader(), spotCounter);
-			spotCounter++;
-		}
-	}
+	//for (int i = 0; i < gameObjects.size(); i++)
+	//{
+	//	if (static_cast<DirectionLight*>(gameObjects[i]) != nullptr)
+	//	{
+	//		static_cast<DirectionLight*>(gameObjects[i])->sendToShader(SINGLETON.getShader(), dirCounter);
+	//		dirCounter++;
+	//	}
+	//	if (static_cast<PointLight*>(gameObjects[i]) != nullptr)
+	//	{
+	//		static_cast<PointLight*>(gameObjects[i])->sendToShader(SINGLETON.getShader(), pointCounter);
+	//		pointCounter++;
+	//	}
+	//	if (static_cast<SpotLight*>(gameObjects[i]) != nullptr)
+	//	{
+	//		static_cast<SpotLight*>(gameObjects[i])->sendToShader(SINGLETON.getShader(), spotCounter);
+	//		spotCounter++;
+	//	}
+	//}
+
+	//just to display the asset loader, will change later in the engine
+	//only one dirLight
+	static_cast<DirectionLight*>(gameObjects[0])->sendToShader(SINGLETON.getShader(), dirCounter);
+	dirCounter++;
 
 	SINGLETON.getShader()->setInt("NR_DIR_LIGHTS", dirCounter);
 	SINGLETON.getShader()->setInt("NR_POINT_LIGHTS", pointCounter);
@@ -222,7 +230,8 @@ void Application::Run()
 	initCam();
 
 	//shader
-	SINGLETON.setShader(SINGLETON.getResources()->Create<Shader>("LibGL/shaders/core_vertex.glsl", "libGL/shaders/core_fragment.glsl"));
+	Shader* shader = SINGLETON.getResources()->Create<Shader>("LibGL/shaders/core_vertex.glsl", "libGL/shaders/core_fragment.glsl");
+	SINGLETON.setShader(shader);
 
 	//lights
 	initLight();
@@ -291,6 +300,7 @@ void Application::framebuffer_size_callback(GLFWwindow* window, int width, int h
 
 void Application::processInput(GLFWwindow* window)
 {
+	std::cout << SINGLETON.getCam()->getFront() << std::endl;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		if (editor)
 			glfwSetWindowShouldClose(window, true);
