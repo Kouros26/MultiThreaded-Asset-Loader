@@ -15,7 +15,7 @@ public:
 
 	lm::vec3 lightColor;
 
-	virtual void sendToShader(Resources::Shader* shader, int i) = 0;
+	virtual void SendToShader(Resources::Shader* shader, int i) = 0;
 };
 
 class PointLight : public Light
@@ -27,7 +27,7 @@ public:
 
 	PointLight(lm::vec3 lightColor, float diff, float amb, float spec, float constant = 1.f, float linear = 0.045f, float quadratic = 0.0075f, std::string name = "");
 
-	void sendToShader(Resources::Shader* shader, int i) override;
+	void SendToShader(Resources::Shader* shader, int i) override;
 };
 
 class DirectionLight : public Light
@@ -35,7 +35,7 @@ class DirectionLight : public Light
 public:
 	DirectionLight(lm::vec3 lightColor, float diff, float amb, float spec, std::string name = "");
 
-	void sendToShader(Resources::Shader* shader, int i) override;
+	void SendToShader(Resources::Shader* shader, int i) override;
 };
 
 class SpotLight : public Light
@@ -50,5 +50,5 @@ public:
 
 	SpotLight(lm::vec3 lightColor, float diff, float amb, float spec, float constant = 1.f, float linear = 0.045f, float quadratic = 0.0075f, float cutOff = 12.5f, float outerCutOff = 15.0f, std::string name = "");
 
-	void sendToShader(Resources::Shader* shader, int i) override;
+	void SendToShader(Resources::Shader* shader, int i) override;
 };

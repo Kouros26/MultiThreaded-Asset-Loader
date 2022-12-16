@@ -5,13 +5,13 @@
 void Transfrom::SetPosition(const lm::vec3& pos)
 {
 	position = pos;
-	Matrix = calcMatrix();
+	Matrix = CalcMatrix();
 }
 
 void Transfrom::SetScale(const lm::vec3& scl)
 {
 	scale = scl;
-	Matrix = calcMatrix();
+	Matrix = CalcMatrix();
 }
 
 void Transfrom::SetRotation(const lm::vec3& rot)
@@ -35,7 +35,7 @@ void Transfrom::SetRotation(const lm::vec3& rot)
 	while (rotation.Z() < -360) {
 		rotation.Z() += 360;
 	}
-	Matrix = calcMatrix();
+	Matrix = CalcMatrix();
 }
 
 lm::vec3 Transfrom::GetPosition()
@@ -56,13 +56,13 @@ lm::vec3 Transfrom::GetRotation()
 void Transfrom::Translate(const lm::vec3& trans)
 {
 	position += trans;
-	Matrix = calcMatrix();
+	Matrix = CalcMatrix();
 }
 
 void Transfrom::AddScale(const lm::vec3& scl)
 {
 	scale += scl;
-	Matrix = calcMatrix();
+	Matrix = CalcMatrix();
 }
 
 void Transfrom::AddRotation(const lm::vec3& rot)
@@ -92,16 +92,16 @@ void Transfrom::AddRotation(const lm::vec3& rot)
 	{
 		rotation.Z() += 360;
 	}
-	Matrix = calcMatrix();
+	Matrix = CalcMatrix();
 }
 
-void Transfrom::AddPosition(lm::vec3& pos)
+void Transfrom::AddPosition(const lm::vec3& pos)
 {
 	position += pos;
-	Matrix = calcMatrix();
+	Matrix = CalcMatrix();
 }
 
-lm::mat4 Transfrom::calcMatrix() const
+lm::mat4 Transfrom::CalcMatrix() const
 {
 	return lm::mat4::createTransformMatrix(rotation, position, scale);
 }

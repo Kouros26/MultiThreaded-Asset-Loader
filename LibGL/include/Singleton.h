@@ -13,19 +13,19 @@ namespace Resources {
 class Singleton
 {
 private:
-	Singleton() {
-		resources = new ResourceManager();
-	};
-	~Singleton() {
-		delete resources;
-	};
+
+	Singleton();
+	~Singleton();
+
 	GameObject* currentCam = nullptr;
 	Resources::Shader* shader = nullptr;
 	ResourceManager* resources = nullptr;
 	lm::mat4 projection;
+
 public:
+
 	int gmCount = 0;
-	float mouseOffSetX = 0, mouseOffSetY = 0;
+	double mouseOffSetX = 0, mouseOffSetY = 0;
 	bool W = false, A = false, S = false, D = false, LMB = false, RMB = false, SPACE = false, E = false;
 	bool LCTRL = false, CTRL_S = false, CTRL_O = false;
 	float delta = 0;
@@ -37,68 +37,24 @@ public:
 	irrklang::ISoundEngine* soundEngine = nullptr;
 	std::vector<irrklang::ISound*> soundsVec;
 
-	static Singleton& getInstance()
-	{
-		static Singleton instance;
-		return instance;
-	}
+	static Singleton& GetInstance();
 
-	GameObject* findObjectWithName(std::string str);
+	[[nodiscard]] GameObject* FindObjectWithName(std::string str) const;
 
-	void setProjectionMatrix(float Width, float  Height)
-	{
-		projection = lm::mat4::perspectiveProjection(70, (float)Width / (float)Height, 0.1f, 100.0f);
-	}
+	lm::mat4 GetProjectionMatrix();
+	GameObject* GetCam() const;
+	float GetTimeScale() const;
+	ResourceManager* GetResources() const;
+	Resources::Shader* GetShader() const;
+	
+	void SetProjectionMatrix(float width, float  height);
+	void SetCam(GameObject* c);
+	void SetTimeScale(const float& newScale);
+	void SetTimeScale(const bool& newScale);
+	void SetShader(Resources::Shader* s);
 
-	lm::mat4 getProjectionMatrix()
-	{
-		return this->projection;
-	}
-
-	void setCam(GameObject* c) {
-		currentCam = c;
-	}
-	GameObject* getCam() {
-		return currentCam;
-	};
-
-	float getTimeScale() {
-		return timescale;
-	}
-	void setTimeScale(const float& newScale) {
-		timescale = newScale;
-	}
-	void setTimeScale(const bool& newScale) {
-		if (newScale) {
-			timescale = 1;
-		}
-		else {
-			timescale = 0;
-		}
-	}
-
-	void playSound(int n, bool loop) {
-		soundsVec.push_back(soundEngine->play2D("LibGL/assets/Sounds/music.mp3", loop)); //music
-	}
-
-	void stopAllSounds() {
-		for (int i = 0; i < soundsVec.size(); i++)
-		{
-			std::cout << "ok" << std::endl;
-		}
-		soundsVec.clear();
-	}
-
-	ResourceManager* getResources() {
-		return resources;
-	};
-
-	void setShader(Resources::Shader* s) {
-		shader = s;
-	}
-	Resources::Shader* getShader() {
-		return shader;
-	};
+	void StartSound(bool loop);
+	void StopAllSounds();
 };
 
-#define SINGLETON Singleton::getInstance()
+#define SINGLETON Singleton::GetInstance()

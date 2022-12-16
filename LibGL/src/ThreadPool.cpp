@@ -3,7 +3,7 @@
 
 ThreadPool::ThreadPool()
 {
-	const unsigned int num_threads = std::thread::hardware_concurrency() * 8 / 10; //take 80 percent of max thread computer can handle
+	const unsigned int num_threads = std::thread::hardware_concurrency();
 
 	for (unsigned int i = 0; i < num_threads; i++)
 	{

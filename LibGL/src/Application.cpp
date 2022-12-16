@@ -64,12 +64,12 @@ void Resources::Application::InitOpenGLOption()
 
 void Application::InitCam()
 {
-	auto editorCamera = new GameObject("Main Camera");
-	editorCamera->addComponent(new Camera(editorCamera));
-	editorCamera->addComponent(new RotateWithMouse(0.5f, true));
-	editorCamera->addComponent(new FreeMovement(10));
+	const auto editorCamera = new GameObject("Main Camera");
+	editorCamera->AddComponent(new Camera(editorCamera));
+	editorCamera->AddComponent(new RotateWithMouse(0.5f, true));
+	editorCamera->AddComponent(new FreeMovement(10));
 	SINGLETON.editorCam = editorCamera;
-	SINGLETON.setCam(editorCamera);
+	SINGLETON.SetCam(editorCamera);
 }//see changes
 
 void Application::InitLight()
@@ -85,12 +85,12 @@ void Application::InitGameObject()
 	{
 		auto box = new GameObject("Box" + std::to_string(i));
 		gameObjects.emplace_back(box);
-		box->addComponent(new LowRenderer::Mesh("libGL/assets/meshes/chest.obj", "libGL/assets/textures/container.jpg"));
+		box->AddComponent(new LowRenderer::Mesh("libGL/assets/meshes/Young__Red_Dragon.obj", "libGL/assets/textures/container.jpg"));
 		box->localTransform.Translate(lm::vec3(10, 0, i * 3));
-		box->localTransform.SetRotation(lm::vec3(0, i * 15, 0));
+		box->localTransform.SetRotation(lm::vec3(0, -90, i * 15));
 	}
 
-	SINGLETON.playSound(0, true);
+	SINGLETON.StartSound(true);
 }
 
 void Application::InitMusic()
@@ -102,8 +102,8 @@ void Application::UpdateLights() const
 {
 	//send lights to shader
 	int dirCounter = 0;
-	int pointCounter = 0;
-	int spotCounter = 0;
+	constexpr int pointCounter = 0;
+	constexpr int spotCounter = 0;
 
 	//can we simplify that ??
 	//for (int i = 0; i < gameObjects.size(); i++)
@@ -127,12 +127,12 @@ void Application::UpdateLights() const
 
 	//just to display the asset loader, will change later in the engine
 	//only one dirLight
-	static_cast<DirectionLight*>(gameObjects[0])->sendToShader(SINGLETON.getShader(), dirCounter);
+	static_cast<DirectionLight*>(gameObjects[0])->SendToShader(SINGLETON.GetShader(), dirCounter);
 	dirCounter++;
 
-	SINGLETON.getShader()->setInt("NR_DIR_LIGHTS", dirCounter);
-	SINGLETON.getShader()->setInt("NR_POINT_LIGHTS", pointCounter);
-	SINGLETON.getShader()->setInt("NR_SPOT_LIGHTS", spotCounter);
+	SINGLETON.GetShader()->SetInt("NR_DIR_LIGHTS", dirCounter);
+	SINGLETON.GetShader()->SetInt("NR_POINT_LIGHTS", pointCounter);
+	SINGLETON.GetShader()->SetInt("NR_SPOT_LIGHTS", spotCounter);
 }
 
 void Application::UpdateGameObject() const
@@ -168,21 +168,21 @@ void Application::GameLoop()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//use shader
-		SINGLETON.getShader()->use();
+		SINGLETON.GetShader()->Use();
 
 		//update lights
 		UpdateLights();
 
 		//send cam
-		SINGLETON.getShader()->setVec3f(SINGLETON.getCam()->worldTransform.GetPosition(), "viewPos");
+		SINGLETON.GetShader()->SetVec3f(SINGLETON.GetCam()->worldTransform.GetPosition(), "viewPos");
 
 		//update GameObject
 		UpdateGameObject();
 
-		if (SINGLETON.getCam() == SINGLETON.editorCam)
-			SINGLETON.getCam()->Update();
+		if (SINGLETON.GetCam() == SINGLETON.editorCam)
+			SINGLETON.GetCam()->Update();
 
-		SINGLETON.getShader()->unUse();
+		SINGLETON.GetShader()->UnUse();
 
 		glfwSwapBuffers(this->window);
 	}
@@ -194,8 +194,8 @@ Application::Application(char const* title, const int SCR_WIDTH, const int SCR_H
 	SCR_WIDTH(SCR_WIDTH),
 	SCR_HEIGHT(SCR_HEIGHT)
 {
-	SINGLETON.setProjectionMatrix(SCR_WIDTH, SCR_HEIGHT);
-	this->projectionMat = SINGLETON.getProjectionMatrix();
+	SINGLETON.SetProjectionMatrix(SCR_WIDTH, SCR_HEIGHT);
+	this->projectionMat = SINGLETON.GetProjectionMatrix();
 
 	// Delta Time
 	this->currentTime = 0.f;
@@ -230,8 +230,8 @@ void Application::Run()
 	InitCam();
 
 	//shader
-	Shader* shader = SINGLETON.getResources()->Create<Shader>("LibGL/shaders/core_vertex.glsl", "libGL/shaders/core_fragment.glsl");
-	SINGLETON.setShader(shader);
+	Shader* shader = SINGLETON.GetResources()->Create<Shader>("LibGL/shaders/core_vertex.glsl", "libGL/shaders/core_fragment.glsl");
+	SINGLETON.SetShader(shader);
 
 	//lights
 	InitLight();
@@ -295,12 +295,12 @@ void Resources::Application::SetCursor(bool cursor) const
 void Application::Framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
-	SINGLETON.setProjectionMatrix(width, height);
+	SINGLETON.SetProjectionMatrix(width, height);
 }
 
 void Application::ProcessInput(GLFWwindow* window)
 {
-	std::cout << SINGLETON.getCam()->getFront() << std::endl;
+	std::cout << SINGLETON.GetCam()->GetFront() << std::endl;
 
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
 	{

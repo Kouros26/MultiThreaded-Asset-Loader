@@ -43,8 +43,9 @@ bool Model::load_obj(const char* filename)
 
 	while (true)
 	{
-		char line_header[128];
+		char line_header[128]{ '\0' };
 
+		// ReSharper disable once CppDeprecatedEntity
 		if (int const res = fscanf(file, "%s", line_header); res == EOF)
 		{
 			log.Print("Model.cpp | LoadOBJ : Reach end of OBJ file\n");
@@ -139,11 +140,11 @@ void Model::draw()
 	glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertex_buffer_.size()));
 }
 
-void Model::buffer::init_vbo(Model* model)
+void Model::Buffer::init_vbo(Model* model)
 {
 	glGenBuffers(1, &id_vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, id_vbo);
-	glBufferData(GL_ARRAY_BUFFER, model->vertex_buffer_.size() * sizeof(vertex), model->vertex_buffer_.data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, model->vertex_buffer_.size() * sizeof(Vertex), model->vertex_buffer_.data(), GL_STATIC_DRAW);
 }
 
 void Model::vertex_attributes::init_vao()
@@ -152,15 +153,15 @@ void Model::vertex_attributes::init_vao()
 	glBindVertexArray(id_vao_);
 
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (GLvoid*)(offsetof(vertex, position)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(offsetof(Vertex, position)));
 	glEnableVertexAttribArray(0);
 
 	// texture coord attribute
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (GLvoid*)offsetof(vertex, texture_uv));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, texture_uv));
 	glEnableVertexAttribArray(1);
 
 	// normal  attribute
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (GLvoid*)offsetof(vertex, normal));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
 	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -176,7 +177,7 @@ void Model::vertex_attributes::bind()
 	glBindVertexArray(id_vao_);
 }
 
-Model::buffer::~buffer()
+Model::Buffer::~Buffer()
 {
 	glDeleteBuffers(1, &id_vbo);
 }

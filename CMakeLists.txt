@@ -94,6 +94,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${glfw_SOURCE_DIR}/include)
 target_link_libraries(${PROJECT_NAME} PUBLIC assimp)
 target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
 
-if(MSVC)
-  target_compile_options(${PROJECT_NAME} PRIVATE /W4 )
-endif()
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/external/irrKlang/dll"
+        $<TARGET_FILE_DIR:AssetLoader>)

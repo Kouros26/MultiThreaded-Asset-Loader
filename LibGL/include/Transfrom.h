@@ -1,6 +1,6 @@
 #pragma once
 #include "Vec3/Vec3.h"
-#include "mat4/mat4.h"
+#include "Mat4/Mat4.h"
 
 class Transfrom
 {
@@ -16,9 +16,9 @@ public:
 	void Translate(const lm::vec3& trans);
 	void AddScale(const lm::vec3& scl);
 	void AddRotation(const lm::vec3& rot);
-	void AddPosition(lm::vec3& pos);
+	void AddPosition(const lm::vec3& pos);
 
-	lm::mat4 calcMatrix() const;
+	[[nodiscard]] lm::mat4 CalcMatrix() const;
 	lm::mat4 Matrix;
 private:
 

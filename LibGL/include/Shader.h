@@ -25,9 +25,10 @@ namespace Resources
 		std::string fragmentShader;
 
 		//private func
-		std::string loadSourceShader(const char* filename);
-		int load_shader(GLenum type, const char* file);
+		std::string LoadSourceShader(const char* filename) const;
+		int Load_shader(GLenum type, const char* file) const;
 		void Link(int vertexShader, int fragmentShader);
+
 	public:
 		//Constructor / destructor
 		Shader() {};
@@ -36,14 +37,14 @@ namespace Resources
 		//public func
 		virtual void Init() override;
 
-		void setMat4f(const lm::Mat4<float> value, const char* name);
-		void setBool(const std::string& name, bool value);
-		void setInt(const std::string& name, int value);
-		void setFloat(const std::string& name, float value);
-		void setVec3f(const lm::Vec3<float> value, const char* name);
-		void setVec3f(const char* name, const lm::Vec3<float> value);
-		void setMat3f(lm::Mat3<float> value, const char* name);
-		void use();
-		void unUse();
+		void SetMat4f(const lm::Mat4<float> value, const char* name) const;
+		void SetBool(const std::string& name, bool value) const;
+		void SetInt(const std::string& name, int value) const;
+		void SetFloat(const std::string& name, float value) const;
+		void SetVec3f(const lm::Vec3<float> value, const char* name) const;
+		void SetVec3f(const char* name, const lm::Vec3<float> value) const;
+		void SetMat3f(lm::Mat3<float> value, const char* name) const;
+		void Use() const;
+		static void UnUse();
 	};
 }

@@ -2,32 +2,32 @@
 #include "Singleton.h"
 #include "Vec2/Vec2.h"
 
-void SpotLight::sendToShader(Resources::Shader* shader, int i)
+void SpotLight::SendToShader(Resources::Shader* shader, int i)
 {
 	std::string str = "spotLights[" + std::to_string(i) + "]";
 	std::string temp = str;
 
-	shader->setVec3f((str.append(".position")).c_str(), worldTransform.GetPosition());
+	shader->SetVec3f((str.append(".position")).c_str(), worldTransform.GetPosition());
 	str = temp;
-	shader->setVec3f((str.append(".direction")).c_str(), getFront());
+	shader->SetVec3f((str.append(".direction")).c_str(), GetFront());
 	str = temp;
-	shader->setVec3f((str.append(".color")).c_str(), this->lightColor);
+	shader->SetVec3f((str.append(".color")).c_str(), this->lightColor);
 	str = temp;
-	shader->setFloat((str.append(".ambient")), this->ambient);
+	shader->SetFloat((str.append(".ambient")), this->ambient);
 	str = temp;
-	shader->setFloat((str.append(".diffuse")), this->diffuse);
+	shader->SetFloat((str.append(".diffuse")), this->diffuse);
 	str = temp;
-	shader->setFloat((str.append(".specular")), this->specular);
+	shader->SetFloat((str.append(".specular")), this->specular);
 	str = temp;
-	shader->setFloat(str.append(".constant"), this->constant);
+	shader->SetFloat(str.append(".constant"), this->constant);
 	str = temp;
-	shader->setFloat(str.append(".linear"), this->linear);
+	shader->SetFloat(str.append(".linear"), this->linear);
 	str = temp;
-	shader->setFloat(str.append(".quadratic"), this->quadratic);
+	shader->SetFloat(str.append(".quadratic"), this->quadratic);
 	str = temp;
-	shader->setFloat((str.append(".cutOff")), static_cast<float>(cos(lm::degreesToRadians(this->cutOff))));
+	shader->SetFloat((str.append(".cutOff")), static_cast<float>(cos(lm::degreesToRadians(this->cutOff))));
 	str = temp;
-	shader->setFloat((str.append(".outerCutOff")), static_cast<float>(cos(lm::degreesToRadians(this->outerCutOff))));
+	shader->SetFloat((str.append(".outerCutOff")), static_cast<float>(cos(lm::degreesToRadians(this->outerCutOff))));
 }
 
 SpotLight::SpotLight(lm::vec3 lightColor, float diff, float amb, float spec, float constant, float linear, float quadratic, float cutOff, float outerCutOff, std::string name)
@@ -52,26 +52,26 @@ PointLight::PointLight(lm::vec3 lightColor, float diff, float amb, float spec, f
 	this->quadratic = quadratic;
 }
 
-void PointLight::sendToShader(Resources::Shader* shader, int i)
+void PointLight::SendToShader(Resources::Shader* shader, int i)
 {
 	// point light 1
 	std::string str = "pointLights[" + std::to_string(i) + "]";
 	std::string temp = str;
-	shader->setVec3f((str.append(".position")).c_str(), worldTransform.GetPosition());
+	shader->SetVec3f((str.append(".position")).c_str(), worldTransform.GetPosition());
 	str = temp;
-	shader->setVec3f((str.append(".color")).c_str(), this->lightColor);
+	shader->SetVec3f((str.append(".color")).c_str(), this->lightColor);
 	str = temp;
-	shader->setFloat((str.append(".ambient")).c_str(), this->ambient);
+	shader->SetFloat((str.append(".ambient")).c_str(), this->ambient);
 	str = temp;
-	shader->setFloat((str.append(".diffuse")).c_str(), this->diffuse);
+	shader->SetFloat((str.append(".diffuse")).c_str(), this->diffuse);
 	str = temp;
-	shader->setFloat((str.append(".specular")).c_str(), this->specular);
+	shader->SetFloat((str.append(".specular")).c_str(), this->specular);
 	str = temp;
-	shader->setFloat(str.append(".constant"), this->constant);
+	shader->SetFloat(str.append(".constant"), this->constant);
 	str = temp;
-	shader->setFloat(str.append(".linear"), this->linear);
+	shader->SetFloat(str.append(".linear"), this->linear);
 	str = temp;
-	shader->setFloat(str.append(".quadratic"), this->quadratic);
+	shader->SetFloat(str.append(".quadratic"), this->quadratic);
 }
 
 DirectionLight::DirectionLight(lm::vec3 lightColor, float diff, float amb, float spec, std::string name)
@@ -80,19 +80,19 @@ DirectionLight::DirectionLight(lm::vec3 lightColor, float diff, float amb, float
 	this->name = name.empty() ? "dirLight" : name;
 }
 
-void DirectionLight::sendToShader(Resources::Shader* shader, int i)
+void DirectionLight::SendToShader(Resources::Shader* shader, int i)
 {
 	std::string str = "dirLights[" + std::to_string(i) + "]";
 	std::string temp = str;
-	shader->setVec3f((str.append(".direction").c_str()), getFront());
+	shader->SetVec3f((str.append(".direction").c_str()), GetFront());
 	str = temp;
-	shader->setVec3f((str.append(".color").c_str()), this->lightColor);
+	shader->SetVec3f((str.append(".color").c_str()), this->lightColor);
 	str = temp;
-	shader->setFloat((str.append(".ambient").c_str()), this->ambient);
+	shader->SetFloat((str.append(".ambient").c_str()), this->ambient);
 	str = temp;
-	shader->setFloat((str.append(".diffuse").c_str()), this->diffuse);
+	shader->SetFloat((str.append(".diffuse").c_str()), this->diffuse);
 	str = temp;
-	shader->setFloat((str.append(".specular").c_str()), this->specular);
+	shader->SetFloat((str.append(".specular").c_str()), this->specular);
 	str = temp;
 }
 

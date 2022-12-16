@@ -3,6 +3,6 @@
 
 int main()
 {
-	Application app("portalGL", 1920, 1080);
+	Application app("Multithreading", 1920, 1080);
 	app.Run();
 }

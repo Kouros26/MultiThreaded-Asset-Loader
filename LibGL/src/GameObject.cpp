@@ -36,9 +36,10 @@ void GameObject::Start()
 	{
 		keys.push_back(it->first);
 	}
-	for (int i = 0; i < keys.size(); i++)
+
+	for (auto& key : keys)
 	{
-		it = components.find(keys[i]);
+		it = components.find(key);
 		if (it != components.end()) {
 			it->second->Start(this);
 		}
@@ -51,7 +52,7 @@ void GameObject::Update()
 	UpdateComponent();
 }
 
-void GameObject::updateGraphMat()
+void GameObject::UpdateGraphMat()
 {
 	Matrix = localTransform.Matrix;
 
@@ -105,7 +106,7 @@ void GameObject::UpdateMatrix()
 	else
 	{
 		worldTransform = localTransform;
-		Matrix = worldTransform.calcMatrix();
+		Matrix = worldTransform.CalcMatrix();
 	}
 }
 
@@ -126,12 +127,12 @@ void GameObject::UpdateComponent()
 	}
 }
 
-void GameObject::setName(const std::string& newName)
+void GameObject::SetName(const std::string& newName)
 {
 	this->name = newName;
 }
 
-std::string GameObject::getName()
+std::string GameObject::GetName()
 {
 	return name;
 }
@@ -157,7 +158,7 @@ void GameObject::UpdateRender()
 	}
 }
 
-lm::vec3 GameObject::getFront() //ok
+lm::vec3 GameObject::GetFront() //ok
 {
 	lm::vec3 front;
 	front.X() = static_cast<float>(cos(lm::degreesToRadians(-localTransform.GetRotation().Y())) * cos(lm::degreesToRadians(localTransform.GetRotation().Z())));
@@ -168,17 +169,17 @@ lm::vec3 GameObject::getFront() //ok
 	return front;
 }
 
-lm::vec3 GameObject::getRight()
+lm::vec3 GameObject::GetRight()
 {
-	return (getFront().crossProduct(lm::vec3(0, 1, 0))).normalized();
+	return (GetFront().crossProduct(lm::vec3(0, 1, 0))).normalized();
 }
 
-lm::vec3 GameObject::getUp()
+lm::vec3 GameObject::GetUp()
 {
-	return (getRight().crossProduct(getFront())).normalized();
+	return (GetRight().crossProduct(GetFront())).normalized();
 }
 
-void GameObject::addComponent(Component* comp) //ok
+void GameObject::AddComponent(Component* comp) //ok
 {
 	if (components.find(comp->name) != components.end()) {
 		components.find(comp->name)->second = comp;
@@ -187,7 +188,7 @@ void GameObject::addComponent(Component* comp) //ok
 	components.insert(std::make_pair(comp->name, comp));
 }
 
-void GameObject::removeComponent(std::string name) //ok
+void GameObject::RemoveComponent(std::string name) //ok
 {
 	if (components.find(name) != components.end()) {
 		delete components.find(name)->second;
@@ -195,7 +196,7 @@ void GameObject::removeComponent(std::string name) //ok
 	}
 }
 
-void GameObject::setParent(GameObject* p) //ok
+void GameObject::SetParent(GameObject* p) //ok
 {
 	GameObject* next = p;
 	while (next != nullptr)
@@ -216,7 +217,9 @@ void GameObject::setParent(GameObject* p) //ok
 
 	p->UpdateMatrix();
 	localTransform.AddRotation(-p->worldTransform.GetRotation());
-	localTransform.SetScale(lm::vec3(localTransform.GetScale()[0] / p->worldTransform.GetScale()[0], localTransform.GetScale()[1] / p->worldTransform.GetScale()[1], localTransform.GetScale()[2] / p->worldTransform.GetScale()[2]));
+	localTransform.SetScale(lm::vec3(localTransform.GetScale()[0] / p->worldTransform.GetScale()[0],
+											 localTransform.GetScale()[1] / p->worldTransform.GetScale()[1], 
+											 localTransform.GetScale()[2] / p->worldTransform.GetScale()[2]));
 	localTransform.Translate(-p->worldTransform.GetPosition());
 
 	parent = p;

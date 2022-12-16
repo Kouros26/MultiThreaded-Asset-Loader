@@ -16,27 +16,26 @@ using namespace Resources;
 
 namespace Resources
 {
-	// ReSharper disable once CppInconsistentNaming
 	class Model : public IResource
 	{
 	private:
 
-		struct vertex
+		struct Vertex
 		{
 			vec3 position;
 			vec2 texture_uv;
 			vec3 normal;
 
-			vertex(vec3 position, vec2 texture_uv, vec3 normal)
-				: position(std::move(position)), texture_uv(std::move(texture_uv)), normal(std::move(normal))
-			{};
+			Vertex(vec3 position, vec2 texture_uv, vec3 normal)
+			: position(std::move(position)), texture_uv(std::move(texture_uv)), normal(std::move(normal))
+			{}
 		};
 
-		class buffer
+		class Buffer
 		{
 		public:
 			GLuint id_vbo = GL_FALSE;
-			~buffer();
+			~Buffer();
 
 			void init_vbo(Model* model);
 		};
@@ -51,11 +50,11 @@ namespace Resources
 			void bind();
 		};
 
-		std::vector<vertex> vertex_buffer_;
+		std::vector<Vertex> vertex_buffer_;
 		std::vector<uint32_t> index_buffer_;
 
 	public:
-		buffer vbo;
+		Buffer vbo;
 		vertex_attributes vao;
 
 		bool only_vertices;

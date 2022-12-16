@@ -1,14 +1,15 @@
 #pragma once
+#include <map>
 #include "Transfrom.h"
 #include "Mat4/mat4.h"
 #include "Vec3/vec3.h"
-#include <map>
 
 class Component;
 
 class GameObject
 {
 public:
+
 	int id;
 	Transfrom localTransform;
 	Transfrom worldTransform;
@@ -28,15 +29,16 @@ public:
 	void UpdateComponent();
 	void UpdateRender();
 
-	void updateGraphMat();
-	void setName(const std::string& newName);
-	std::string getName();
-	lm::vec3 getFront();
-	lm::vec3 getRight();
-	lm::vec3 getUp();
-	void addComponent(Component* comp);
+	void UpdateGraphMat();
+	void SetName(const std::string& newName);
+	std::string GetName();
+	lm::vec3 GetFront();
+	lm::vec3 GetRight();
+	lm::vec3 GetUp();
+	void AddComponent(Component* comp);
+
 	template<typename T>
-	T* getComponent(std::string key)
+	T* GetComponent(std::string key)
 	{
 		auto it = components.find(key);
 		if (it == components.end())
@@ -46,8 +48,9 @@ public:
 
 		return static_cast <T*>(it->second);
 	}
-	void removeComponent(std::string name);
-	void setParent(GameObject* p = nullptr);
+
+	void RemoveComponent(std::string name);
+	void SetParent(GameObject* p = nullptr);
 };
 
 class Component

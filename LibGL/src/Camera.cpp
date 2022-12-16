@@ -21,7 +21,7 @@ void Camera::Update(GameObject* gameObject, float delta)
 lm::mat4 Camera::CreateViewMatrix()
 {
 	lm::mat4 tmp;
-	this->viewMatrix = tmp.lookAt(obj->worldTransform.GetPosition(), obj->worldTransform.GetPosition() + obj->getFront(), obj->getUp());
+	this->viewMatrix = tmp.lookAt(obj->worldTransform.GetPosition(), obj->worldTransform.GetPosition() + obj->GetFront(), obj->GetUp());
 	return this->viewMatrix;
 }
 
@@ -38,7 +38,7 @@ RotateWithMouse::RotateWithMouse(float s, bool editor)
 };
 
 void RotateWithMouse::Start(GameObject* gameObject)
-{ /*IDK Man he doesn't want to compile*/
+{
 	std::cout << gameObject << " start\n";
 }
 
@@ -65,7 +65,7 @@ void RotateWithMouse::Update(GameObject* gameObject, float delta)
 	}
 };
 
-FreeMovement::FreeMovement(float s)
+FreeMovement::FreeMovement(const float s)
 {
 	name = "freeMovement";
 	speed = s;
@@ -76,16 +76,17 @@ void FreeMovement::Start(GameObject* gameObject)
 	Component::Start(gameObject);
 }
 
-void FreeMovement::Update(GameObject* gameObject, float delta) {
+void FreeMovement::Update(GameObject* gameObject, float delta)
+{
 	if (SINGLETON.W)
-		gameObject->localTransform.Translate(gameObject->getFront() * SINGLETON.delta * this->speed);
+		gameObject->localTransform.Translate(gameObject->GetFront() * SINGLETON.delta * this->speed);
 
 	if (SINGLETON.S)
-		gameObject->localTransform.Translate(-gameObject->getFront() * SINGLETON.delta * this->speed);
+		gameObject->localTransform.Translate(-gameObject->GetFront() * SINGLETON.delta * this->speed);
 
 	if (SINGLETON.A)
-		gameObject->localTransform.Translate(-gameObject->getRight() * SINGLETON.delta * this->speed);
+		gameObject->localTransform.Translate(-gameObject->GetRight() * SINGLETON.delta * this->speed);
 
 	if (SINGLETON.D)
-		gameObject->localTransform.Translate(gameObject->getRight() * SINGLETON.delta * this->speed);
+		gameObject->localTransform.Translate(gameObject->GetRight() * SINGLETON.delta * this->speed);
 }
