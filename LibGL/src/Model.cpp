@@ -42,7 +42,7 @@ bool Model::load_obj(const char* filename)
 	{
 		char line_header[128];
 
-		if (fscanf_s(file, "%s", line_header, 128) == EOF)
+		if (int const res = fscanf(file, "%s", line_header); res == EOF)
 		{
 			log.Print("Model.cpp | LoadOBJ : Reach end of OBJ file\n");
 			break;
@@ -51,12 +51,7 @@ bool Model::load_obj(const char* filename)
 		if (strcmp(line_header, "v") == 0)
 		{
 			lm::vec3 vertex;
-			if (fscanf_s(file, "%f %f %f\n", &vertex[0], &vertex[1], &vertex[2]) != 3)
-			{
-				log.Print("Model.cpp | LoadOBJ : Error while reading vertex\n");
-				return false;
-			}
-
+			fscanf_s(file, "%f %f %f\n", &vertex[0], &vertex[1], &vertex[2]);
 			temp_positition.push_back(vertex);
 		}
 		else if (strcmp(line_header, "#") == 0)
@@ -65,23 +60,13 @@ bool Model::load_obj(const char* filename)
 		else if (strcmp(line_header, "vt") == 0)
 		{
 			lm::vec2 uv;
-			if (fscanf_s(file, "%f %f\n", &uv[0], &uv[1]) != 2)
-			{
-				log.Print("Model.cpp | LoadOBJ : Error while reading uv\n");
-				return false;
-			}
-
+			fscanf_s(file, "%f %f\n", &uv[0], &uv[1]);
 			temp_uv.push_back(uv);
 		}
 		else if (strcmp(line_header, "vn") == 0)
 		{
 			lm::vec3 normal;
-			if (fscanf_s(file, "%f %f %f\n", &normal[0], &normal[1], &normal[2]) != 3)
-			{
-				log.Print("Model.cpp | LoadOBJ : Error while reading normal\n");
-				return false;
-			}
-
+			fscanf_s(file, "%f %f %f\n", &normal[0], &normal[1], &normal[2]);
 			temp_normal.push_back(normal);
 		}
 		else if (strcmp(line_header, "f") == 0)

@@ -38,7 +38,7 @@ LowRenderer::Mesh::Mesh(std::string modelPath, std::string texturePath)
 	}
 	else
 	{
-		this->model = SINGLETON.getResources()->CreateRessource<Model>(modelPath.c_str());
+		this->model = SINGLETON.getResources()->Create<Model>(modelPath.c_str());
 	}
 
 	if (texturePath != "") {
@@ -47,7 +47,7 @@ LowRenderer::Mesh::Mesh(std::string modelPath, std::string texturePath)
 		}
 		else
 		{
-			this->texture = SINGLETON.getResources()->CreateRessource<Texture>(texturePath.c_str());
+			this->texture = SINGLETON.getResources()->Create<Texture>(texturePath.c_str());
 		}
 	}
 }

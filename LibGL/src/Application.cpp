@@ -222,7 +222,7 @@ void Application::Run()
 	initCam();
 
 	//shader
-	SINGLETON.setShader(SINGLETON.getResources()->CreateRessource<Shader>("LibGL/shaders/core_vertex.glsl", "libGL/shaders/core_fragment.glsl"));
+	SINGLETON.setShader(SINGLETON.getResources()->Create<Shader>("LibGL/shaders/core_vertex.glsl", "libGL/shaders/core_fragment.glsl"));
 
 	//lights
 	initLight();

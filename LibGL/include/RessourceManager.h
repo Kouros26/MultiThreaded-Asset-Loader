@@ -44,6 +44,18 @@ public:
 		return rsc;
 	}
 
+	template <typename T, typename ...args>
+	T* Create(const char* const& filename, args... Args)
+	{
+		static_assert(std::is_base_of_v<IResource, T>, "T is not a child of IResources");
+
+		manager[filename] = std::make_unique<T>(filename, Args...);
+		std::unique_ptr<IResource>& value = manager[filename];
+		IResource* ptr = value.get();
+		T* rsc = static_cast<T*>(ptr);
+		return rsc;
+	};
+
 	template <typename T>
 	T* Get(std::string const& filename)
 	{

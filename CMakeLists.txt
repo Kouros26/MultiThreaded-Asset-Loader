@@ -83,6 +83,7 @@ set(OPENGL_INCLUDES "LibGL/include")
 target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDES})
 
 
+
 FetchContent_MakeAvailable(GLFW assimp)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE_DIR})
