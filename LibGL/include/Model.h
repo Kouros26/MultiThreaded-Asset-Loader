@@ -61,7 +61,7 @@ namespace Resources
 		bool only_vertices;
 
 		Model(const char* filename);
-		virtual void init() override;
+		virtual void Init() override;
 
 		bool load_obj(const char* filename);
 		void binding_vao();

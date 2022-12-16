@@ -5,20 +5,20 @@
 class Transfrom
 {
 public:
-	void setPosition(lm::vec3 pos);
-	void setScale(lm::vec3 scl);
-	void setRotation(lm::vec3 rot);
+	void SetPosition(const lm::vec3& pos);
+	void SetScale(const lm::vec3& scl);
+	void SetRotation(const lm::vec3& rot);
 
-	lm::vec3 getPosition();
-	lm::vec3 getScale();
-	lm::vec3 getRotation();
+	lm::vec3 GetPosition();
+	lm::vec3 GetScale();
+	lm::vec3 GetRotation();
 
-	void translate(lm::vec3 trans);
-	void addScale(lm::vec3 scl);
-	void addRotation(lm::vec3 rot);
-	void addPosition(lm::vec3 pos);
+	void Translate(const lm::vec3& trans);
+	void AddScale(const lm::vec3& scl);
+	void AddRotation(const lm::vec3& rot);
+	void AddPosition(lm::vec3& pos);
 
-	lm::mat4 calcMatrix();
+	lm::mat4 calcMatrix() const;
 	lm::mat4 Matrix;
 private:
 

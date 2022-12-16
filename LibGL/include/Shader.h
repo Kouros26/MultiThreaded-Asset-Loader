@@ -34,7 +34,7 @@ namespace Resources
 		Shader(const char* vertexShader, const  char* fragmentShader);
 		~Shader();
 		//public func
-		virtual void init() override;
+		virtual void Init() override;
 
 		void setMat4f(const lm::Mat4<float> value, const char* name);
 		void setBool(const std::string& name, bool value);

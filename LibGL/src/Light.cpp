@@ -7,7 +7,7 @@ void SpotLight::sendToShader(Resources::Shader* shader, int i)
 	std::string str = "spotLights[" + std::to_string(i) + "]";
 	std::string temp = str;
 
-	shader->setVec3f((str.append(".position")).c_str(), worldTransform.getPosition());
+	shader->setVec3f((str.append(".position")).c_str(), worldTransform.GetPosition());
 	str = temp;
 	shader->setVec3f((str.append(".direction")).c_str(), getFront());
 	str = temp;
@@ -57,7 +57,7 @@ void PointLight::sendToShader(Resources::Shader* shader, int i)
 	// point light 1
 	std::string str = "pointLights[" + std::to_string(i) + "]";
 	std::string temp = str;
-	shader->setVec3f((str.append(".position")).c_str(), worldTransform.getPosition());
+	shader->setVec3f((str.append(".position")).c_str(), worldTransform.GetPosition());
 	str = temp;
 	shader->setVec3f((str.append(".color")).c_str(), this->lightColor);
 	str = temp;

@@ -17,9 +17,12 @@ ThreadPool::~ThreadPool()
 	shouldStop = true;
 
 	mutexCondition.notify_all();
-	for (std::thread& active_thread : threads) {
+
+	for (std::thread& active_thread : threads) 
+	{
 		active_thread.join();
 	}
+
 	threads.clear();
 }
 
@@ -48,9 +51,11 @@ void ThreadPool::ThreadLoop()
 			{
 				return;
 			}
+
 			task = tasksQueue.front();
 			tasksQueue.pop();
 		}
+
 		task();
 	}
 }

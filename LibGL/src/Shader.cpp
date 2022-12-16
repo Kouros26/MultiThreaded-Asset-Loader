@@ -6,7 +6,7 @@ Resources::Shader::Shader(const char* vertexFile, const char* fragmentFile)
 	fragmentShader = loadSourceShader(fragmentFile);
 }
 
-void Resources::Shader::init()
+void Resources::Shader::Init()
 {
 	int vertexShaderId = 0;
 	int FragmentShaderId = 0;

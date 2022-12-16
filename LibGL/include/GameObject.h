@@ -58,7 +58,7 @@ public:
 
 	virtual void Update(GameObject* gameObject, float delta) = 0;
 
-	virtual void Start(GameObject* gameObject) = 0;
+	virtual void Start(GameObject* gameObject);
 
 	virtual ~Component() = default;
 };

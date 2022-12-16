@@ -1,6 +1,6 @@
 #include "Application.h"
 
-void Application::initWindow(const char* title)
+void Application::InitWindow(const char* title)
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -14,22 +14,22 @@ void Application::initWindow(const char* title)
 
 	// glfw window creation
 	// --------------------
-	GLFWwindow* window = glfwCreateWindow(this->SCR_WIDTH, this->SCR_HEIGHT, title, NULL, NULL);
-	if (window == NULL)
+	GLFWwindow* app = glfwCreateWindow(this->SCR_WIDTH, this->SCR_HEIGHT, title, NULL, NULL);
+	if (app == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
 	}
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, Application::framebuffer_size_callback);
+	glfwMakeContextCurrent(app);
+	glfwSetFramebufferSizeCallback(app, Application::Framebuffer_size_callback);
 
 	// Enable VSYNC
 	glfwSwapInterval(1);
 
-	this->window = window;
+	this->window = app;
 }
 
-void Application::initGlad()
+void Application::InitGlad()
 {
 	// glad: load all OpenGL function pointers
 // ---------------------------------------
@@ -44,12 +44,12 @@ void Application::initGlad()
 	{
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(Application::glDebugOutput, nullptr);
+		glDebugMessageCallback(Application::GlDebugOutput, nullptr);
 		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 	}
 }
 
-void Resources::Application::initOpenGLOption()
+void Resources::Application::InitOpenGLOption()
 {
 	glEnable(GL_DEPTH_TEST);
 
@@ -62,43 +62,43 @@ void Resources::Application::initOpenGLOption()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void Application::initCam()
+void Application::InitCam()
 {
-	GameObject* editorCamera = new GameObject("Main Camera");
+	auto editorCamera = new GameObject("Main Camera");
 	editorCamera->addComponent(new Camera(editorCamera));
-	editorCamera->addComponent(new rotateWithMouse(0.5f, true));
-	editorCamera->addComponent(new freeMovement(10));
+	editorCamera->addComponent(new RotateWithMouse(0.5f, true));
+	editorCamera->addComponent(new FreeMovement(10));
 	SINGLETON.editorCam = editorCamera;
 	SINGLETON.setCam(editorCamera);
 }//see changes
 
-void Application::initLight()
+void Application::InitLight()
 {
 	GameObject* dirLight = new DirectionLight(lm::vec3(1, 1, 1), 0.5f, 0.5f, 0.8f);
 	gameObjects.emplace_back(dirLight);
 }
 
-void Application::initGameObject()
+void Application::InitGameObject()
 {
 	//create 5 box
 	for (int i = 0; i < 5; i++)
 	{
-		GameObject* box = new GameObject("Box" + std::to_string(i));
+		auto box = new GameObject("Box" + std::to_string(i));
 		gameObjects.emplace_back(box);
 		box->addComponent(new LowRenderer::Mesh("libGL/assets/meshes/chest.obj", "libGL/assets/textures/container.jpg"));
-		box->localTransform.translate(lm::vec3(10, 0, i * 3));
-		box->localTransform.setRotation(lm::vec3(0, i * 15, 0));
+		box->localTransform.Translate(lm::vec3(10, 0, i * 3));
+		box->localTransform.SetRotation(lm::vec3(0, i * 15, 0));
 	}
 
 	SINGLETON.playSound(0, true);
 }
 
-void Application::initMusic()
+void Application::InitMusic()
 {
 	SINGLETON.soundEngine = irrklang::createIrrKlangDevice();
 }
 
-void Application::updateLights()
+void Application::UpdateLights() const
 {
 	//send lights to shader
 	int dirCounter = 0;
@@ -135,7 +135,7 @@ void Application::updateLights()
 	SINGLETON.getShader()->setInt("NR_SPOT_LIGHTS", spotCounter);
 }
 
-void Application::updateGameObject()
+void Application::UpdateGameObject() const
 {
 	if (editor) {
 		for (const auto& gameObject : gameObjects)
@@ -158,10 +158,10 @@ void Application::GameLoop()
 	while (!glfwWindowShouldClose(this->window))
 	{
 		//time
-		updateDelta();
+		UpdateDelta();
 
 		//input
-		updateInput();
+		UpdateInput();
 
 		//render
 		glClearColor(clear_color.X(), clear_color.Y(), clear_color.Z(), 1.0f);
@@ -171,13 +171,13 @@ void Application::GameLoop()
 		SINGLETON.getShader()->use();
 
 		//update lights
-		updateLights();
+		UpdateLights();
 
 		//send cam
-		SINGLETON.getShader()->setVec3f(SINGLETON.getCam()->worldTransform.getPosition(), "viewPos");
+		SINGLETON.getShader()->setVec3f(SINGLETON.getCam()->worldTransform.GetPosition(), "viewPos");
 
 		//update GameObject
-		updateGameObject();
+		UpdateGameObject();
 
 		if (SINGLETON.getCam() == SINGLETON.editorCam)
 			SINGLETON.getCam()->Update();
@@ -212,9 +212,9 @@ Application::Application(char const* title, const int SCR_WIDTH, const int SCR_H
 	this->newGameObject = 0;
 	this->addComponentButton = false;
 	this->renameGameObject = false;
-	this->initWindow(title);
-	this->initGlad();
-	this->initOpenGLOption();
+	this->InitWindow(title);
+	this->InitGlad();
+	this->InitOpenGLOption();
 
 	// add the debug drawer to the world
 
@@ -224,20 +224,20 @@ Application::Application(char const* title, const int SCR_WIDTH, const int SCR_H
 void Application::Run()
 {
 	//music/sounds
-	initMusic();
+	InitMusic();
 
 	//cam
-	initCam();
+	InitCam();
 
 	//shader
 	Shader* shader = SINGLETON.getResources()->Create<Shader>("LibGL/shaders/core_vertex.glsl", "libGL/shaders/core_fragment.glsl");
 	SINGLETON.setShader(shader);
 
 	//lights
-	initLight();
+	InitLight();
 
 	//scene
-	initGameObject();
+	InitGameObject();
 
 	//game loop
 	GameLoop();
@@ -246,7 +246,7 @@ void Application::Run()
 	glfwTerminate();
 }
 
-void Resources::Application::updateMouseInput()
+void Resources::Application::UpdateMouseInput()
 {
 	glfwGetCursorPos(this->window, &this->mouseX, &this->mouseY);
 
@@ -264,12 +264,12 @@ void Resources::Application::updateMouseInput()
 	this->lastMouseY = this->mouseY;
 }
 
-GLFWwindow* Resources::Application::getWindow()
+GLFWwindow* Resources::Application::GetWindow() const
 {
 	return window;
 }
 
-void Resources::Application::updateDelta()
+void Resources::Application::UpdateDelta()
 {
 	this->currentTime = static_cast<float>(glfwGetTime());
 	SINGLETON.unscaledDelta = this->currentTime - this->lastTime;
@@ -277,14 +277,14 @@ void Resources::Application::updateDelta()
 	this->lastTime = this->currentTime;
 }
 
-void Resources::Application::updateInput()
+void Resources::Application::UpdateInput()
 {
 	glfwPollEvents();
-	processInput(window);
-	updateMouseInput();
+	ProcessInput(window);
+	UpdateMouseInput();
 }
 
-void Resources::Application::setCursor(bool cursor)
+void Resources::Application::SetCursor(bool cursor) const
 {
 	if (cursor)
 		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -292,21 +292,23 @@ void Resources::Application::setCursor(bool cursor)
 		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
-void Application::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void Application::Framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 	SINGLETON.setProjectionMatrix(width, height);
 }
 
-void Application::processInput(GLFWwindow* window)
+void Application::ProcessInput(GLFWwindow* window)
 {
 	std::cout << SINGLETON.getCam()->getFront() << std::endl;
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
+	{
 		if (editor)
 			glfwSetWindowShouldClose(window, true);
 		else
 		{
-			setCursor(false);
+			SetCursor(false);
 			showImgui = true;
 		}
 	}
@@ -404,7 +406,7 @@ void Application::processInput(GLFWwindow* window)
 	}
 }
 
-void APIENTRY Application::glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+void APIENTRY Application::GlDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	// ignore non-significant error/warning codes
 	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;

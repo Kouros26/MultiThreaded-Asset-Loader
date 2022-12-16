@@ -55,11 +55,11 @@ void GameObject::updateGraphMat()
 {
 	Matrix = localTransform.Matrix;
 
-	localTransform.setPosition(lm::vec3(Matrix[3][0], Matrix[3][1], Matrix[3][2]));
+	localTransform.SetPosition(lm::vec3(Matrix[3][0], Matrix[3][1], Matrix[3][2]));
 	float Sx = lm::vec3(Matrix[0][0], Matrix[0][1], Matrix[0][2]).length();
 	float Sy = lm::vec3(Matrix[1][0], Matrix[1][1], Matrix[1][2]).length();
 	float Sz = lm::vec3(Matrix[2][0], Matrix[2][1], Matrix[2][2]).length();
-	localTransform.setScale(lm::vec3(Sx, Sy, Sz));
+	localTransform.SetScale(lm::vec3(Sx, Sy, Sz));
 
 	float a = Matrix[1][2] / Sy;
 	float b = Matrix[2][2] / Sz;
@@ -67,7 +67,7 @@ void GameObject::updateGraphMat()
 	float Ry = lm::radiansToDegrees(atan2(-Matrix[0][2] / Sx, sqrt(a * a + b * b)));
 	float Rz = lm::radiansToDegrees(atan2(Matrix[0][1] / Sx, Matrix[0][0] / Sx));
 
-	localTransform.setRotation(lm::vec3(Rx, Ry, Rz));
+	localTransform.SetRotation(lm::vec3(Rx, Ry, Rz));
 }
 
 void GameObject::UpdateMatrix()
@@ -80,12 +80,12 @@ void GameObject::UpdateMatrix()
 	if (parent != nullptr) {
 		Matrix = parent->Matrix * localTransform.Matrix;
 
-		worldTransform.setPosition(lm::vec3(Matrix[3][0], Matrix[3][1], Matrix[3][2]));
-		lm::vec3 pScale = parent->worldTransform.getScale();
-		float Sx = pScale.X() * localTransform.getScale().X();
-		float Sy = pScale.Y() * localTransform.getScale().Y();
-		float Sz = pScale.Z() * localTransform.getScale().Z();
-		worldTransform.setScale(lm::vec3(Sx, Sy, Sz));
+		worldTransform.SetPosition(lm::vec3(Matrix[3][0], Matrix[3][1], Matrix[3][2]));
+		lm::vec3 pScale = parent->worldTransform.GetScale();
+		float Sx = pScale.X() * localTransform.GetScale().X();
+		float Sy = pScale.Y() * localTransform.GetScale().Y();
+		float Sz = pScale.Z() * localTransform.GetScale().Z();
+		worldTransform.SetScale(lm::vec3(Sx, Sy, Sz));
 
 		lm::Mat4 rotationMatrix(
 			lm::vec4(Matrix[0][0] / Sx, Matrix[0][1] / Sx, Matrix[0][2] / Sx, 0),
@@ -100,7 +100,7 @@ void GameObject::UpdateMatrix()
 		float Ry = lm::radiansToDegrees(atan2(-rotationMatrix[0][2], sqrt(a * a + b * b)));
 		float Rz = lm::radiansToDegrees(atan2(rotationMatrix[0][1], rotationMatrix[0][0]));
 
-		worldTransform.setRotation(lm::vec3(Rx, Ry, Rz));
+		worldTransform.SetRotation(lm::vec3(Rx, Ry, Rz));
 	}
 	else
 	{
@@ -145,10 +145,11 @@ void GameObject::UpdateRender()
 	{
 		keys.push_back(it->first);
 	}
-	for (int i = 0; i < keys.size(); i++)
+
+	for (auto& key : keys)
 	{
-		if (keys[i] == "Mesh" || keys[i] == "dirLight" || keys[i] == "pointLight" || keys[i] == "spotLight") {
-			it = components.find(keys[i]);
+		if (key == "Mesh" || key == "dirLight" || key == "pointLight" || key == "spotLight") {
+			it = components.find(key);
 			if (it != components.end()) {
 				it->second->Update(this, SINGLETON.delta);
 			}
@@ -159,9 +160,9 @@ void GameObject::UpdateRender()
 lm::vec3 GameObject::getFront() //ok
 {
 	lm::vec3 front;
-	front.X() = static_cast<float>(cos(lm::degreesToRadians(-localTransform.getRotation().Y())) * cos(lm::degreesToRadians(localTransform.getRotation().Z())));
-	front.Y() = static_cast<float>(sin(lm::degreesToRadians(localTransform.getRotation().Z())));
-	front.Z() = static_cast<float>(sin(lm::degreesToRadians(-localTransform.getRotation().Y())) * cos(lm::degreesToRadians(localTransform.getRotation().Z())));
+	front.X() = static_cast<float>(cos(lm::degreesToRadians(-localTransform.GetRotation().Y())) * cos(lm::degreesToRadians(localTransform.GetRotation().Z())));
+	front.Y() = static_cast<float>(sin(lm::degreesToRadians(localTransform.GetRotation().Z())));
+	front.Z() = static_cast<float>(sin(lm::degreesToRadians(-localTransform.GetRotation().Y())) * cos(lm::degreesToRadians(localTransform.GetRotation().Z())));
 
 	front = front.normalized();
 	return front;
@@ -214,9 +215,14 @@ void GameObject::setParent(GameObject* p) //ok
 	}
 
 	p->UpdateMatrix();
-	localTransform.addRotation(-p->worldTransform.getRotation());
-	localTransform.setScale(lm::vec3(localTransform.getScale()[0] / p->worldTransform.getScale()[0], localTransform.getScale()[1] / p->worldTransform.getScale()[1], localTransform.getScale()[2] / p->worldTransform.getScale()[2]));
-	localTransform.translate(-p->worldTransform.getPosition());
+	localTransform.AddRotation(-p->worldTransform.GetRotation());
+	localTransform.SetScale(lm::vec3(localTransform.GetScale()[0] / p->worldTransform.GetScale()[0], localTransform.GetScale()[1] / p->worldTransform.GetScale()[1], localTransform.GetScale()[2] / p->worldTransform.GetScale()[2]));
+	localTransform.Translate(-p->worldTransform.GetPosition());
 
 	parent = p;
+}
+
+void Component::Start(GameObject* gameObject)
+{
+	std::cout << gameObject << " start\n";
 }

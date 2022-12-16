@@ -16,7 +16,7 @@ Model::Model(const char* filename)
 	load_obj(filename);
 }
 
-void Model::init()
+void Model::Init()
 {
 	vbo.init_vbo(this);
 	vao.init_vao();

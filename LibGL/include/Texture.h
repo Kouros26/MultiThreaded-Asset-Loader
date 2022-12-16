@@ -13,9 +13,9 @@ namespace Resources
 
 		Texture(char const* const& filename);
 
-		virtual void init() override;
+		virtual void Init() override;
 
-		void Bind();
+		void Bind() const;
 
 	private:
 		unsigned char* data;

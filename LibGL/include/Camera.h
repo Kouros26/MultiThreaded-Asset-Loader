@@ -6,45 +6,44 @@
 class Camera : public Component
 {
 private:
+
 	lm::Mat4<float> viewMatrix;
 	GameObject* obj;
+
 public:
-	void Start(GameObject* gameObject) override { /*IDK Man he doesn't want to compile*/std::cout << gameObject << " start\n"; }
-	Camera(GameObject* obj) {
-		name = "Camera";
-		this->obj = obj;
-	};
+
+	Camera(GameObject* obj);
+
+	void Start(GameObject* gameObject) override;
 
 	void Update(GameObject* gameObject, float delta) override;
-	const lm::mat4 createViewMatrix();
-	//get view matrix
-	const lm::mat4& getViewMatrix() const;
+	lm::mat4 CreateViewMatrix();
+
+	[[nodiscard]] const lm::mat4& GetViewMatrix() const;
 };
 
-class rotateWithMouse : public Component
+class RotateWithMouse : public Component
 {
 public:
-	void Start(GameObject* gameObject) override { /*IDK Man he doesn't want to compile*/std::cout << gameObject << " start\n"; }
-	rotateWithMouse(float s, bool editor) {
-		name = "rotateWithMouse";
-		sensitivity = s;
-		isEditor = editor;
-	};
+
+	RotateWithMouse(float s, bool editor);
+
+	void Start(GameObject* gameObject) override;
 
 	void Update(GameObject* gameObject, float delta) override;
 
 private:
+
 	float sensitivity = 0;
 	bool isEditor = false;
 };
 
-class freeMovement : public Component {
+class FreeMovement : public Component {
 public:
-	void Start(GameObject* gameObject) override { /*IDK Man he doesn't want to compile*/std::cout << gameObject << " start\n"; }
-	freeMovement(float s) {
-		name = "freeMovement";
-		speed = s;
-	}
+
+	explicit FreeMovement(float s);
+
+	void Start(GameObject* gameObject) override;
 
 	void Update(GameObject* gameObject, float delta) override;
 

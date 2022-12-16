@@ -42,7 +42,7 @@ LowRenderer::Mesh::Mesh(const std::string modelPath, const std::string texturePa
 
 void LowRenderer::Mesh::updateUniform(Resources::Shader* shader, Camera* cam)
 {
-	SINGLETON.getShader()->setMat4f(this->calculateMVP(cam->createViewMatrix()), "MVP");
+	SINGLETON.getShader()->setMat4f(this->calculateMVP(cam->CreateViewMatrix()), "MVP");
 	lm::mat4 tmp2 = this->modelMat;
 	shader->setMat4f(tmp2, "model");
 	lm::mat3 tmp = this->modelMat;

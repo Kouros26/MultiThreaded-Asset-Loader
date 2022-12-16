@@ -58,17 +58,17 @@ namespace Resources
 		bool firstMouse;
 
 		//private function
-		void initWindow(const char* title);
-		void initGlad();
-		void initOpenGLOption();
-		void initCam();
-		void initLight();
-		void initGameObject();
+		void InitWindow(const char* title);
+		static void InitGlad();
+		static void InitOpenGLOption();
+		static void InitCam();
+		void InitLight();
+		void InitGameObject();
 
-		void initMusic();
+		static void InitMusic();
 
-		void updateLights();
-		void updateGameObject();
+		void UpdateLights() const;
+		void UpdateGameObject() const;
 
 		void GameLoop();
 
@@ -81,17 +81,17 @@ namespace Resources
 
 		//public function
 		void Run();
-		void updateDelta();
-		void updateMouseInput();
+		void UpdateDelta();
+		void UpdateMouseInput();
 
 		// Get
-		GLFWwindow* getWindow();
+		GLFWwindow* GetWindow() const;
 
 		// Set
-		void setCursor(bool cursor);
+		void SetCursor(bool cursor) const;
 
-		void updateInput();
-		void processInput(GLFWwindow* window);
+		void UpdateInput();
+		void ProcessInput(GLFWwindow* window);
 
 		//gameObject
 		std::vector<GameObject*> gameObjects;
@@ -107,7 +107,7 @@ namespace Resources
 		bool showImgui = true;
 
 		//static function
-		static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-		static void APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+		static void Framebuffer_size_callback(GLFWwindow* window, int width, int height);
+		static void APIENTRY GlDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 	};
 }

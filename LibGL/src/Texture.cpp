@@ -11,7 +11,7 @@ Resources::Texture::Texture(char const* const& filename)
 	data = stbi_load(filename, &x, &y, &n, 0);
 }
 
-void Resources::Texture::init()
+void Resources::Texture::Init()
 {
 	glGenTextures(1, &index);
 	glBindTexture(GL_TEXTURE_2D, index);
@@ -20,18 +20,20 @@ void Resources::Texture::init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (data != nullptr) {
+	if (data != nullptr) 
+	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, x, y, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 		stbi_image_free(data);
 	}
+
 	else
 	{
 		std::cout << "error loading texture " << std::endl;
 	}
 }
 
-void Resources::Texture::Bind()
+void Resources::Texture::Bind() const
 {
 	glBindTexture(GL_TEXTURE_2D, index);
 }
