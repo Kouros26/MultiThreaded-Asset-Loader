@@ -85,12 +85,32 @@ void Application::InitGameObject()
 	{
 		auto box = new GameObject("Box" + std::to_string(i));
 		gameObjects.emplace_back(box);
-		box->addComponent(new LowRenderer::Mesh("libGL/assets/meshes/chest.obj", "libGL/assets/textures/container.jpg"));
+		box->addComponent(new LowRenderer::Mesh(SINGLETON.getResources()->Get<Model>("LibGL/assets/meshes/Young__Red_Dragon.obj"), SINGLETON.getResources()->Get<Texture>("LibGL/assets/textures/container.jpg")));
 		box->localTransform.Translate(lm::vec3(10, 0, i * 3));
 		box->localTransform.SetRotation(lm::vec3(0, i * 15, 0));
 	}
 
 	SINGLETON.playSound(0, true);
+}
+
+void Resources::Application::InitAssets()
+{
+	//add Shader to ressourcesManager
+	SINGLETON.getResources()->Create<Shader>("LibGL/shaders/core_vertex.glsl", "LibGL/shaders/core_fragment.glsl");
+	//create Mesh
+	SINGLETON.getResources()->Create<Model>("LibGL/assets/meshes/chest.obj");
+	SINGLETON.getResources()->Create<Model>("LibGL/assets/meshes/HelmetV.obj");
+	SINGLETON.getResources()->Create<Model>("LibGL/assets/meshes/armadillo.obj");
+	SINGLETON.getResources()->Create<Model>("LibGL/assets/meshes/bunny.obj");
+	SINGLETON.getResources()->Create<Model>("LibGL/assets/meshes/tyra.obj");
+	SINGLETON.getResources()->Create<Model>("LibGL/assets/meshes/Young__Red_Dragon.obj");
+
+	SINGLETON.getResources()->Create<Texture>("LibGL/assets/textures/container.jpg");
+
+	while (!SINGLETON.getResources()->AreAllRessourcesLoaded())
+	{
+	}
+	SINGLETON.getResources()->InitAll();
 }
 
 void Application::InitMusic()
@@ -223,14 +243,16 @@ Application::Application(char const* title, const int SCR_WIDTH, const int SCR_H
 
 void Application::Run()
 {
+	//assets
+	InitAssets();
+
 	//music/sounds
 	InitMusic();
 
 	//cam
 	InitCam();
-
 	//shader
-	Shader* shader = SINGLETON.getResources()->Create<Shader>("LibGL/shaders/core_vertex.glsl", "libGL/shaders/core_fragment.glsl");
+	Shader* shader = SINGLETON.getResources()->Get<Shader>("LibGL/shaders/core_vertex.glsl");
 	SINGLETON.setShader(shader);
 
 	//lights
@@ -300,12 +322,13 @@ void Application::Framebuffer_size_callback(GLFWwindow* window, int width, int h
 
 void Application::ProcessInput(GLFWwindow* window)
 {
-	std::cout << SINGLETON.getCam()->getFront() << std::endl;
-
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 	{
 		if (editor)
+		{
 			glfwSetWindowShouldClose(window, true);
+			SINGLETON.stopAllSounds();
+		}
 		else
 		{
 			SetCursor(false);

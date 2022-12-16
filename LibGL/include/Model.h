@@ -16,55 +16,54 @@ using namespace Resources;
 
 namespace Resources
 {
-	// ReSharper disable once CppInconsistentNaming
 	class Model : public IResource
 	{
 	private:
 
-		struct vertex
+		struct Vertex
 		{
 			vec3 position;
-			vec2 texture_uv;
+			vec2 textureUv;
 			vec3 normal;
 
-			vertex(vec3 position, vec2 texture_uv, vec3 normal)
-				: position(std::move(position)), texture_uv(std::move(texture_uv)), normal(std::move(normal))
+			Vertex(vec3 position, vec2 textureUv, vec3 normal)
+				: position(std::move(position)), textureUv(std::move(textureUv)), normal(std::move(normal))
 			{};
 		};
 
-		class buffer
+		class Buffer
 		{
 		public:
-			GLuint id_vbo = GL_FALSE;
-			~buffer();
+			GLuint idVbo = GL_FALSE;
+			~Buffer();
 
-			void init_vbo(Model* model);
+			void InitVbo(Model* model);
 		};
 
-		class vertex_attributes
+		class VertexAttributes
 		{
-			GLuint id_vao_ = GL_FALSE;
+			GLuint idVao = GL_FALSE;
 		public:
-			~vertex_attributes();
+			~VertexAttributes();
 
-			void init_vao();
-			void bind();
+			void InitVao();
+			void Bind();
 		};
 
-		std::vector<vertex> vertex_buffer_;
-		std::vector<uint32_t> index_buffer_;
+		std::vector<Vertex> vertexBuffer;
+		std::vector<uint32_t> indexBuffer;
 
 	public:
-		buffer vbo;
-		vertex_attributes vao;
+		Buffer vbo;
+		VertexAttributes vao;
 
-		bool only_vertices;
+		bool onlyVertices;
 
 		Model(const char* filename);
 		virtual void Init() override;
 
-		bool load_obj(const char* filename);
-		void binding_vao();
-		void draw();
+		bool LoadObj(const char* filename);
+		void BindingVao();
+		void Draw();
 	};
 }

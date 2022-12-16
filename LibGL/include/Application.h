@@ -64,6 +64,7 @@ namespace Resources
 		static void InitCam();
 		void InitLight();
 		void InitGameObject();
+		void InitAssets();
 
 		static void InitMusic();
 

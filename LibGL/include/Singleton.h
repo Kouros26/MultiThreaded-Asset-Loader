@@ -82,10 +82,7 @@ public:
 	}
 
 	void stopAllSounds() {
-		for (int i = 0; i < soundsVec.size(); i++)
-		{
-			std::cout << "ok" << std::endl;
-		}
+		soundEngine->stopAllSounds();
 		soundsVec.clear();
 	}
 

@@ -12,17 +12,17 @@ using namespace Core::Debug;
 
 Model::Model(const char* filename)
 {
-	only_vertices = false;
-	load_obj(filename);
+	onlyVertices = false;
+	LoadObj(filename);
 }
 
 void Model::Init()
 {
-	vbo.init_vbo(this);
-	vao.init_vao();
+	vbo.InitVbo(this);
+	vao.InitVao();
 }
 
-bool Model::load_obj(const char* filename)
+bool Model::LoadObj(const char* filename)
 {
 	Log log;
 	log.Openfile("LogFile.txt");
@@ -37,80 +37,80 @@ bool Model::load_obj(const char* filename)
 		return false;
 	}
 
-	std::vector<lm::vec3> temp_positition;
-	std::vector<lm::vec3> temp_normal;
-	std::vector <lm::vec2> temp_uv;
+	std::vector<lm::vec3> tempVertices;
+	std::vector<lm::vec3> tempNormals;
+	std::vector <lm::vec2> tempUvs;
 
 	while (true)
 	{
-		char line_header[128];
+		char lineHeader[128];
 
-		if (int const res = fscanf(file, "%s", line_header); res == EOF)
+		if (int const res = fscanf(file, "%s", lineHeader); res == EOF)
 		{
 			log.Print("Model.cpp | LoadOBJ : Reach end of OBJ file\n");
 			break;
 		}
 
-		if (strcmp(line_header, "v") == 0)
+		if (strcmp(lineHeader, "v") == 0)
 		{
 			lm::vec3 vertex;
 			fscanf_s(file, "%f %f %f\n", &vertex[0], &vertex[1], &vertex[2]);
-			temp_positition.push_back(vertex);
+			tempVertices.push_back(vertex);
 		}
-		else if (strcmp(line_header, "#") == 0)
+		else if (strcmp(lineHeader, "#") == 0)
 		{
 		}
-		else if (strcmp(line_header, "vt") == 0)
+		else if (strcmp(lineHeader, "vt") == 0)
 		{
 			lm::vec2 uv;
 			fscanf_s(file, "%f %f\n", &uv[0], &uv[1]);
-			temp_uv.push_back(uv);
+			tempUvs.push_back(uv);
 		}
-		else if (strcmp(line_header, "vn") == 0)
+		else if (strcmp(lineHeader, "vn") == 0)
 		{
 			lm::vec3 normal;
 			fscanf_s(file, "%f %f %f\n", &normal[0], &normal[1], &normal[2]);
-			temp_normal.push_back(normal);
+			tempNormals.push_back(normal);
 		}
-		else if (strcmp(line_header, "f") == 0)
+		else if (strcmp(lineHeader, "f") == 0)
 		{
 			long long temp_position_buffer[9]{ 0 };
 
-			if (temp_uv.empty() && temp_normal.empty())
+			if (tempUvs.empty() && tempNormals.empty())
 			{
-				only_vertices = true;
+				onlyVertices = true;
 				fscanf_s(file, "%lld %lld %lld\n",
 					&temp_position_buffer[0],
 					&temp_position_buffer[3],
 					&temp_position_buffer[6]);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[0] - 1], 0.f, 0.f);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[3] - 1], 0.f, 0.f);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[6] - 1], 0.f, 0.f);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[0] - 1], 0.f, 0.f);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[3] - 1], 0.f, 0.f);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[6] - 1], 0.f, 0.f);
 			}
 
-			if (temp_uv.empty() && only_vertices == false)
+			if (tempUvs.empty() && onlyVertices == false)
 			{
-				long long temp_normal_buffer[9]{ 0 };
+				long long tempNormalBuffer[9]{ 0 };
 				fscanf_s(file, "%lld//%lld %lld//%lld %lld//%lld\n",
-					&temp_position_buffer[0], &temp_normal_buffer[2],
-					&temp_position_buffer[3], &temp_normal_buffer[5],
-					&temp_position_buffer[6], &temp_normal_buffer[8]);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[0] - 1], 0.f, temp_normal[temp_normal_buffer[2] - 1]);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[3] - 1], 0.f, temp_normal[temp_normal_buffer[5] - 1]);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[6] - 1], 0.f, temp_normal[temp_normal_buffer[8] - 1]);
+					&temp_position_buffer[0], &tempNormalBuffer[2],
+					&temp_position_buffer[3], &tempNormalBuffer[5],
+					&temp_position_buffer[6], &tempNormalBuffer[8]);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[0] - 1], 0.f, tempNormals[tempNormalBuffer[2] - 1]);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[3] - 1], 0.f, tempNormals[tempNormalBuffer[5] - 1]);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[6] - 1], 0.f, tempNormals[tempNormalBuffer[8] - 1]);
 			}
-			if (temp_normal.empty() && only_vertices == false)
+			if (tempNormals.empty() && onlyVertices == false)
 			{
-				long long temp_uv_buffer[9]{ 0 };
+				long long tempUvBuffer[9]{ 0 };
 				fscanf_s(file, "%lld/%lld/ %lld/%lld/ %lld/%lld/\n",
-					&temp_position_buffer[0], &temp_uv_buffer[1],
-					&temp_position_buffer[3], &temp_uv_buffer[4],
-					&temp_position_buffer[6], &temp_uv_buffer[7]);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[0] - 1], temp_uv[temp_uv_buffer[1] - 1], 0);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[3] - 1], temp_uv[temp_uv_buffer[4] - 1], 0);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[6] - 1], temp_uv[temp_uv_buffer[7] - 1], 0);
+					&temp_position_buffer[0], &tempUvBuffer[1],
+					&temp_position_buffer[3], &tempUvBuffer[4],
+					&temp_position_buffer[6], &tempUvBuffer[7]);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[0] - 1], tempUvs[tempUvBuffer[1] - 1], 0);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[3] - 1], tempUvs[tempUvBuffer[4] - 1], 0);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[6] - 1], tempUvs[tempUvBuffer[7] - 1], 0);
 			}
-			if (!temp_uv.empty() && !temp_normal.empty() && only_vertices == false)
+			if (!tempUvs.empty() && !tempNormals.empty() && onlyVertices == false)
 			{
 				long long temp_uv_buffer[9]{ 0 };
 				long long temp_normal_buffer[9]{ 0 };
@@ -118,9 +118,9 @@ bool Model::load_obj(const char* filename)
 					&temp_position_buffer[0], &temp_uv_buffer[1], &temp_normal_buffer[2],
 					&temp_position_buffer[3], &temp_uv_buffer[4], &temp_normal_buffer[5],
 					&temp_position_buffer[6], &temp_uv_buffer[7], &temp_normal_buffer[8]);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[0] - 1], temp_uv[temp_uv_buffer[1] - 1], temp_normal[temp_normal_buffer[2] - 1]);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[3] - 1], temp_uv[temp_uv_buffer[4] - 1], temp_normal[temp_normal_buffer[5] - 1]);
-				vertex_buffer_.emplace_back(temp_positition[temp_position_buffer[6] - 1], temp_uv[temp_uv_buffer[7] - 1], temp_normal[temp_normal_buffer[8] - 1]);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[0] - 1], tempUvs[temp_uv_buffer[1] - 1], tempNormals[temp_normal_buffer[2] - 1]);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[3] - 1], tempUvs[temp_uv_buffer[4] - 1], tempNormals[temp_normal_buffer[5] - 1]);
+				vertexBuffer.emplace_back(tempVertices[temp_position_buffer[6] - 1], tempUvs[temp_uv_buffer[7] - 1], tempNormals[temp_normal_buffer[8] - 1]);
 			}
 		}
 	}
@@ -128,60 +128,60 @@ bool Model::load_obj(const char* filename)
 	return true;
 }
 
-void Model::binding_vao()
+void Model::BindingVao()
 {
-	vao.bind();
+	vao.Bind();
 }
 
-void Model::draw()
+void Model::Draw()
 {
-	vao.bind();
-	glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertex_buffer_.size()));
+	vao.Bind();
+	glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(vertexBuffer.size()));
 }
 
-void Model::buffer::init_vbo(Model* model)
+void Model::Buffer::InitVbo(Model* model)
 {
-	glGenBuffers(1, &id_vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, id_vbo);
-	glBufferData(GL_ARRAY_BUFFER, model->vertex_buffer_.size() * sizeof(vertex), model->vertex_buffer_.data(), GL_STATIC_DRAW);
+	glGenBuffers(1, &idVbo);
+	glBindBuffer(GL_ARRAY_BUFFER, idVbo);
+	glBufferData(GL_ARRAY_BUFFER, model->vertexBuffer.size() * sizeof(Vertex), model->vertexBuffer.data(), GL_STATIC_DRAW);
 }
 
-void Model::vertex_attributes::init_vao()
+void Model::VertexAttributes::InitVao()
 {
-	glGenVertexArrays(1, &id_vao_);
-	glBindVertexArray(id_vao_);
+	glGenVertexArrays(1, &idVao);
+	glBindVertexArray(idVao);
 
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (GLvoid*)(offsetof(vertex, position)));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)(offsetof(Vertex, position)));
 	glEnableVertexAttribArray(0);
 
 	// texture coord attribute
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (GLvoid*)offsetof(vertex, texture_uv));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, textureUv));
 	glEnableVertexAttribArray(1);
 
 	// normal  attribute
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), (GLvoid*)offsetof(vertex, normal));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, normal));
 	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
 
-void Model::vertex_attributes::bind()
+void Model::VertexAttributes::Bind()
 {
-	if (id_vao_ == GL_FALSE)
+	if (idVao == GL_FALSE)
 	{
-		glGenVertexArrays(1, &id_vao_);
+		glGenVertexArrays(1, &idVao);
 	}
-	glBindVertexArray(id_vao_);
+	glBindVertexArray(idVao);
 }
 
-Model::buffer::~buffer()
+Model::Buffer::~Buffer()
 {
-	glDeleteBuffers(1, &id_vbo);
+	glDeleteBuffers(1, &idVbo);
 }
 
-Model::vertex_attributes::~vertex_attributes()
+Model::VertexAttributes::~VertexAttributes()
 {
-	glDeleteVertexArrays(1, &id_vao_);
+	glDeleteVertexArrays(1, &idVao);
 }

@@ -39,9 +39,9 @@ Commentaire
 	utilisation de banderole
 
 Struct
-
+	PascalCase => typedef: t_PascalCase
 Enum
-
+	PascalCase => typedef: E_PascalCase
 Namespace
 
 preprocesseur

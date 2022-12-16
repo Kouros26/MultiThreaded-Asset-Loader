@@ -11,7 +11,7 @@ public:
 	ThreadPool();
 	~ThreadPool();
 	void AddToQueue(const std::function<void()>& task);
-
+	bool IsBusy();
 private:
 
 	void ThreadLoop();

@@ -24,3 +24,23 @@ void ResourceManager::Clear()
 {
 	manager.clear();
 }
+
+void ResourceManager::InitAll()
+{
+	for (const auto& obj : manager)
+	{
+		obj.second->Init();
+	}
+}
+
+bool ResourceManager::AreAllRessourcesLoaded()
+{
+	for (const auto& obj : manager)
+	{
+		if (!obj.second)
+		{
+			return false;
+		}
+	}
+	return true;
+}

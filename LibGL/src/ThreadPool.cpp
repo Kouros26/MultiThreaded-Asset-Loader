@@ -18,7 +18,7 @@ ThreadPool::~ThreadPool()
 
 	mutexCondition.notify_all();
 
-	for (std::thread& active_thread : threads) 
+	for (std::thread& active_thread : threads)
 	{
 		active_thread.join();
 	}
@@ -28,10 +28,22 @@ ThreadPool::~ThreadPool()
 
 void ThreadPool::AddToQueue(const std::function<void()>& task)
 {
-	std::unique_lock<std::mutex> lock(queueMutex);
-	tasksQueue.push(task);
+	{
+		std::unique_lock<std::mutex> lock(queueMutex);
+		tasksQueue.push(task);
+	}
 
 	mutexCondition.notify_one();
+}
+
+bool ThreadPool::IsBusy()
+{
+	bool isPoolbusy;
+	{
+		std::unique_lock<std::mutex> lock(queueMutex);
+		isPoolbusy = !tasksQueue.empty();
+	}
+	return isPoolbusy;
 }
 
 void ThreadPool::ThreadLoop()
